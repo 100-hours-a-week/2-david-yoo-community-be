@@ -1,7 +1,7 @@
 [
-  {
-    "email": "test2@test.com",
-    "password": "$2b$10$iDGOL2XlPl0S.hLhPpjs1uu434pj91wNO58DQZ9d74VNJmWR5hAjK",
-    "nickname": "day2"
-  }
+    {
+        "email": "test2@test.com",
+        "password": "$2b$10$iDGOL2XlPl0S.hLhPpjs1uu434pj91wNO58DQZ9d74VNJmWR5hAjK",
+        "nickname": "day2"
+    }
 ]
