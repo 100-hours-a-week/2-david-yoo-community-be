@@ -11,8 +11,6 @@ const PORT = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
-
 // multer 설정
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -25,17 +23,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.use(cors({
-    origin: 'http://127.0.0.1:5500', // CORS 허용할 출처
-    credentials: true,
-}));
+app.use(
+    cors({
+        origin: 'http://127.0.0.1:5500', // CORS 허용할 출처
+        credentials: true,
+    }),
+);
 
 app.use(express.json());
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'public', 'html', 'login.html'));
 });
-
 
 // 회원가입 API
 app.post('/signup', async (req, res) => {
@@ -57,13 +56,12 @@ app.post('/signup', async (req, res) => {
         let users = data ? JSON.parse(data) : [];
         users.push(userData);
 
-        fs.writeFile(filePath, JSON.stringify(users, null, 2), (err) => {
+        fs.writeFile(filePath, JSON.stringify(users, null, 2), err => {
             if (err) return res.status(500).send('파일 저장 오류');
             res.status(201).send({ message: '회원가입 성공' });
         });
     });
 });
-
 
 // 로그인 API
 app.post('/login', (req, res) => {
@@ -83,30 +81,37 @@ app.post('/login', (req, res) => {
         }
 
         // 이메일로 사용자 검색
-        const user = users.find((user) => user.email === email);
-        if (!user) return res.status(401).send('이메일 또는 비밀번호가 올바르지 않습니다.');
+        const user = users.find(user => user.email === email);
+        if (!user)
+            return res
+                .status(401)
+                .send('이메일 또는 비밀번호가 올바르지 않습니다.');
 
         // 비밀번호 확인
         bcrypt.compare(password, user.password, (err, result) => {
             if (err) return res.status(500).send('비밀번호 확인 오류');
-            if (!result) return res.status(401).send('이메일 또는 비밀번호가 올바르지 않습니다.');
+            if (!result)
+                return res
+                    .status(401)
+                    .send('이메일 또는 비밀번호가 올바르지 않습니다.');
 
             res.status(200).json({ success: true, nickname: user.nickname });
         });
     });
 });
 
-
 // 닉네임 업데이트 라우트
 app.post('/update-nickname', (req, res) => {
     const { email, nickname } = req.body;
-    
+
     const filePath = path.join(process.cwd(), 'data', 'userInfo.json');
 
     fs.readFile(filePath, 'utf-8', (err, data) => {
         if (err) {
             console.error('파일 읽기 오류:', err);
-            return res.status(500).json({ success: false, message: '서버 오류 발생' });
+            return res
+                .status(500)
+                .json({ success: false, message: '서버 오류 발생' });
         }
 
         let users = JSON.parse(data);
@@ -114,15 +119,28 @@ app.post('/update-nickname', (req, res) => {
 
         if (user) {
             user.nickname = nickname;
-            fs.writeFile(filePath, JSON.stringify(users, null, 2), 'utf-8', (err) => {
-                if (err) {
-                    console.error('파일 쓰기 오류:', err);
-                    return res.status(500).json({ success: false, message: '서버 오류 발생' });
-                }
-                res.json({ success: true });
-            });
+            fs.writeFile(
+                filePath,
+                JSON.stringify(users, null, 2),
+                'utf-8',
+                err => {
+                    if (err) {
+                        console.error('파일 쓰기 오류:', err);
+                        return res
+                            .status(500)
+                            .json({
+                                success: false,
+                                message: '서버 오류 발생',
+                            });
+                    }
+                    res.json({ success: true });
+                },
+            );
         } else {
-            res.status(404).json({ success: false, message: '사용자를 찾을 수 없음' });
+            res.status(404).json({
+                success: false,
+                message: '사용자를 찾을 수 없음',
+            });
         }
     });
 });
@@ -131,8 +149,8 @@ app.post('/update-nickname', (req, res) => {
 app.post('/create-post', upload.single('image'), (req, res) => {
     const { title, content, nickname } = req.body;
     const time = new Date().toISOString();
-    
-    // 새로운 게시물 객체 생성 
+
+    // 새로운 게시물 객체 생성
     // TODO : image
     const newPost = { title, content, nickname, time };
 
@@ -143,16 +161,21 @@ app.post('/create-post', upload.single('image'), (req, res) => {
         const posts = JSON.parse(data || '[]'); // 빈 배열로 초기화
 
         // ID 자동 할당: 기존 게시물에서 최대 ID 값을 찾아서 1 증가
-        const maxId = posts.length > 0 ? Math.max(...posts.map(post => post.id)) : 0;
+        const maxId =
+            posts.length > 0 ? Math.max(...posts.map(post => post.id)) : 0;
         newPost.id = maxId + 1; // 새로운 ID 할당
 
         posts.push(newPost); // 새로운 게시물 추가
 
         // 파일에 저장
-        fs.writeFile('data/post-data.json', JSON.stringify(posts, null, 2), (err) => {
-            if (err) return res.status(500).send('서버 오류');
-            res.json({ success: true });
-        });
+        fs.writeFile(
+            'data/post-data.json',
+            JSON.stringify(posts, null, 2),
+            err => {
+                if (err) return res.status(500).send('서버 오류');
+                res.json({ success: true });
+            },
+        );
     });
 });
 
@@ -174,8 +197,9 @@ app.post('/change-password', async (req, res) => {
         }
 
         // 이메일로 사용자 검색
-        const userIndex = users.findIndex((user) => user.email === email);
-        if (userIndex === -1) return res.status(404).send('사용자를 찾을 수 없습니다.');
+        const userIndex = users.findIndex(user => user.email === email);
+        if (userIndex === -1)
+            return res.status(404).send('사용자를 찾을 수 없습니다.');
 
         // 새 비밀번호 해싱
         bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
@@ -185,7 +209,7 @@ app.post('/change-password', async (req, res) => {
             users[userIndex].password = hashedPassword;
 
             // 업데이트된 데이터 저장
-            fs.writeFile(filePath, JSON.stringify(users, null, 2), (err) => {
+            fs.writeFile(filePath, JSON.stringify(users, null, 2), err => {
                 if (err) return res.status(500).send('파일 저장 오류');
                 res.status(200).send({ message: '비밀번호 변경 성공' });
             });
@@ -242,15 +266,20 @@ app.put('/posts/:id', (req, res) => {
 
         if (postIndex !== -1) {
             posts[postIndex] = { ...posts[postIndex], ...updatedPost }; // 기존 게시물 수정
-            fs.writeFile('data/post-data.json', JSON.stringify(posts, null, 2), (err) => {
-                if (err) return res.status(500).send('서버 오류');
-                res.json({ success: true });
-            });
+            fs.writeFile(
+                'data/post-data.json',
+                JSON.stringify(posts, null, 2),
+                err => {
+                    if (err) return res.status(500).send('서버 오류');
+                    res.json({ success: true });
+                },
+            );
         } else {
             res.status(404).send('게시물을 찾을 수 없습니다.');
         }
     });
 });
 
-
-app.listen(PORT, () => console.log(`서버가 http://localhost:${PORT} 에서 실행 중입니다.`));
+app.listen(PORT, () =>
+    console.log(`서버가 http://localhost:${PORT} 에서 실행 중입니다.`),
+);
