@@ -5,6 +5,7 @@ import path from 'path';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
+import commentRoutes from './routes/commentRoutes.js';
 
 const app = express();
 const PORT = 3000;
@@ -126,12 +127,10 @@ app.post('/update-nickname', (req, res) => {
                 err => {
                     if (err) {
                         console.error('파일 쓰기 오류:', err);
-                        return res
-                            .status(500)
-                            .json({
-                                success: false,
-                                message: '서버 오류 발생',
-                            });
+                        return res.status(500).json({
+                            success: false,
+                            message: '서버 오류 발생',
+                        });
                     }
                     res.json({ success: true });
                 },
@@ -279,6 +278,9 @@ app.put('/posts/:id', (req, res) => {
         }
     });
 });
+
+// 댓글
+app.use('/api', commentRoutes);
 
 app.listen(PORT, () =>
     console.log(`서버가 http://localhost:${PORT} 에서 실행 중입니다.`),
