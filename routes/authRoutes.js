@@ -2,13 +2,16 @@ import express from 'express';
 import {
     signup,
     login,
+    logout,
     updateNickname,
+    isAuthenticated,
 } from '../controllers/authController.js';
 
 const router = express.Router();
 
 router.post('/signup', signup);
 router.post('/login', login);
-router.post('/update-nickname', updateNickname);
+router.post('/logout', logout);
+router.post('/update-nickname', isAuthenticated, updateNickname);
 
 export default router;
