@@ -51,11 +51,9 @@ export const addComment = (req, res) => {
                             JSON.stringify(posts, null, 2),
                             err => {
                                 if (err)
-                                    return res
-                                        .status(500)
-                                        .json({
-                                            error: '포스트를 저장하는 중 오류 발생',
-                                        });
+                                    return res.status(500).json({
+                                        error: '포스트를 저장하는 중 오류 발생',
+                                    });
                                 res.json(newComment);
                             },
                         );
@@ -82,4 +80,62 @@ export const getComments = (req, res) => {
         );
         res.json(filteredComments);
     });
+};
+
+export const deleteComment = async (req, res) => {
+    const commentId = parseInt(req.params.id, 10);
+
+    try {
+        const commentsData = await fs.promises.readFile(
+            'data/commentInfo.json',
+            'utf8',
+        );
+        let comments = JSON.parse(commentsData || '[]');
+
+        const commentIndex = comments.findIndex(c => c.id === commentId);
+
+        if (commentIndex === -1) {
+            return res.status(404).json({
+                success: false,
+                message: '댓글을 찾을 수 없습니다.',
+            });
+        }
+
+        const postId = comments[commentIndex].postId;
+
+        comments.splice(commentIndex, 1);
+
+        await fs.promises.writeFile(
+            'data/commentInfo.json',
+            JSON.stringify(comments, null, 2),
+        );
+
+        const postsData = await fs.promises.readFile(
+            'data/post-data.json',
+            'utf8',
+        );
+        let posts = JSON.parse(postsData);
+
+        const post = posts.find(p => p.id === postId);
+        if (post) {
+            post.commentsCount = (post.commentsCount || 0) - 1;
+            if (post.commentsCount < 0) post.commentsCount = 0;
+
+            await fs.promises.writeFile(
+                'data/posts.json',
+                JSON.stringify(posts, null, 2),
+            );
+        }
+
+        res.json({
+            success: true,
+            message: '댓글이 성공적으로 삭제되었습니다.',
+        });
+    } catch (error) {
+        console.error('댓글 삭제 중 오류:', error);
+        res.status(500).json({
+            success: false,
+            message: '서버 오류가 발생했습니다.',
+        });
+    }
 };
