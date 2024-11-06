@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
+import session from 'express-session';
 
 import authRoutes from './routes/authRoutes.js';
 import postRoutes from './routes/postRoutes.js';
@@ -22,10 +23,32 @@ const upload = multer({ storage });
 
 app.use(cors({ origin: 'http://127.0.0.1:5500', credentials: true }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // URL 인코딩된 데이터를 처리
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) =>
     res.sendFile(path.join(__dirname, 'public', 'html', 'login.html')),
+);
+
+// 세션
+app.use(
+    session({
+        secret: 'my-secret-key', // 알아서 바꿔주기
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 24 * 60 * 60 * 1000, // 24시간 후 세션 종료
+            sameSite: 'strict',
+        },
+    }),
+);
+
+app.use(
+    cors({
+        origin: 'http://127.0.0.1:5500',
+        credentials: true,
+    }),
 );
 
 // 라우트 연결
