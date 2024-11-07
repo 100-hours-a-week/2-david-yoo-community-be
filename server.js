@@ -21,12 +21,13 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-
-app.use(cors({
-    origin: 'http://127.0.0.1:5500',  // 허용할 출처
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // 허용할 HTTP 메서드
-    credentials: true  // 쿠키/세션을 위한 설정
-}));
+app.use(
+    cors({
+        origin: 'http://127.0.0.1:5500', // 허용할 출처
+        methods: ['GET', 'POST', 'PUT', 'DELETE'], // 허용할 HTTP 메서드
+        credentials: true, // 쿠키/세션을 위한 설정
+    }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
