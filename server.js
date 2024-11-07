@@ -21,7 +21,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-app.use(cors({ origin: 'http://127.0.0.1:5500', credentials: true }));
+
+app.use(cors({
+    origin: 'http://127.0.0.1:5500',  // 허용할 출처
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // 허용할 HTTP 메서드
+    credentials: true  // 쿠키/세션을 위한 설정
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -39,7 +44,7 @@ app.use(
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             maxAge: 24 * 60 * 60 * 1000, // 24시간 후 세션 종료
-            sameSite: 'strict',
+            sameSite: 'none',
         },
     }),
 );

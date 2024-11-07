@@ -52,7 +52,7 @@ export const changePassword = async (req, res) => {
 
             fs.writeFile(filePath, JSON.stringify(users, null, 2), err => {
                 if (err) return res.status(500).send('파일 저장 오류');
-                res.status(200).send({ message: '비밀번호 변경 성공' });
+                res.status(200).send({ success: true, message: '비밀번호 변경 성공' });
             });
         });
     });
