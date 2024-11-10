@@ -1,109 +1,126 @@
 [
-  {
-    "id": 2,
-    "title": "닉네임 잘 나옴?",
-    "content": "제발...ㅋㅋㅋㅋ123",
-    "nickname": "day2",
-    "time": "2024-11-04T13:57:52.206Z",
-    "views": 0,
-    "commentsCount": 0
-  },
-  {
-    "id": 4,
-    "title": "123",
-    "content": "123123",
-    "nickname": "day2",
-    "time": "2024-11-04T14:01:04.226Z",
-    "views": 0,
-    "commentsCount": 0
-  },
-  {
-    "id": 8,
-    "title": "추가",
-    "content": "추가된 내용...",
-    "nickname": "day2",
-    "time": "2024-11-05T12:13:28.088Z",
-    "views": 0,
-    "commentsCount": 3
-  },
-  {
-    "title": "수정",
-    "content": "수정",
-    "nickname": "null",
-    "time": "2024-11-05T13:13:08.680Z",
-    "id": 9
-  },
-  {
-    "title": "hello",
-    "content": "하이욤",
-    "nickname": "day2",
-    "time": "2024-11-05T13:23:59.023Z",
-    "id": 10,
-    "commentsCount": 7
-  },
-  {
-    "title": "안녕세상아",
-    "content": "hello world",
-    "nickname": "헬로월드",
-    "time": "2024-11-05T13:26:08.376Z",
-    "id": 11,
-    "commentsCount": 1
-  },
-  {
-    "title": "page2",
-    "content": "11",
-    "nickname": "bakgom",
-    "time": "2024-11-06T09:25:18.790Z",
-    "id": 12,
-    "commentsCount": 0
-  },
-  {
-    "title": "page33",
-    "content": "33",
-    "nickname": "bakgom",
-    "time": "2024-11-06T09:25:25.297Z",
-    "id": 13,
-    "commentsCount": 0
-  },
-  {
-    "title": "page44",
-    "content": "44",
-    "nickname": "bakgom",
-    "time": "2024-11-06T09:25:30.915Z",
-    "id": 14,
-    "commentsCount": 0
-  },
-  {
-    "title": "page55",
-    "content": "55",
-    "nickname": "bakgom",
-    "time": "2024-11-06T09:25:43.782Z",
-    "id": 15,
-    "commentsCount": 0
-  },
-  {
-    "title": "page66",
-    "content": "66",
-    "nickname": "bakgom",
-    "time": "2024-11-06T09:25:51.833Z",
-    "id": 16,
-    "commentsCount": 0
-  },
-  {
-    "title": "인피니트 스크롤링 ",
-    "content": "확인!!",
-    "nickname": "bakgom",
-    "time": "2024-11-06T09:35:53.148Z",
-    "id": 17,
-    "commentsCount": 0,
-    "updatedAt": "2024-11-06T09:41:32.647Z"
-  },
-  {
-    "title": "123",
-    "content": "123",
-    "nickname": "Bakgom :)",
-    "time": "2024-11-07T12:57:14.336Z",
-    "id": 19,
-    "commentsCount": 0
-  }
+    {
+        "id": 2,
+        "title": "닉네임 잘 나옴?",
+        "content": "제발...ㅋㅋㅋㅋ123",
+        "nickname": "day2",
+        "time": "2024-11-04T13:57:52.206Z",
+        "views": 0,
+        "commentsCount": 0
+    },
+    {
+        "id": 4,
+        "title": "123",
+        "content": "123123",
+        "nickname": "day2",
+        "time": "2024-11-04T14:01:04.226Z",
+        "views": 0,
+        "commentsCount": 0
+    },
+    {
+        "id": 8,
+        "title": "추가",
+        "content": "추가된 내용...",
+        "nickname": "day2",
+        "time": "2024-11-05T12:13:28.088Z",
+        "views": 0,
+        "commentsCount": 3
+    },
+    {
+        "title": "수정",
+        "content": "수정",
+        "nickname": "null",
+        "time": "2024-11-05T13:13:08.680Z",
+        "id": 9
+    },
+    {
+        "title": "hello",
+        "content": "하이욤",
+        "nickname": "day2",
+        "time": "2024-11-05T13:23:59.023Z",
+        "id": 10,
+        "commentsCount": 7
+    },
+    {
+        "title": "안녕세상아",
+        "content": "hello world",
+        "nickname": "헬로월드",
+        "time": "2024-11-05T13:26:08.376Z",
+        "id": 11,
+        "commentsCount": 1
+    },
+    {
+        "title": "page2",
+        "content": "11",
+        "nickname": "bakgom",
+        "time": "2024-11-06T09:25:18.790Z",
+        "id": 12,
+        "commentsCount": 0
+    },
+    {
+        "title": "page33",
+        "content": "33",
+        "nickname": "bakgom",
+        "time": "2024-11-06T09:25:25.297Z",
+        "id": 13,
+        "commentsCount": 0
+    },
+    {
+        "title": "page44",
+        "content": "44",
+        "nickname": "bakgom",
+        "time": "2024-11-06T09:25:30.915Z",
+        "id": 14,
+        "commentsCount": 0
+    },
+    {
+        "title": "page55",
+        "content": "55",
+        "nickname": "bakgom",
+        "time": "2024-11-06T09:25:43.782Z",
+        "id": 15,
+        "commentsCount": 0
+    },
+    {
+        "title": "page66",
+        "content": "66",
+        "nickname": "bakgom",
+        "time": "2024-11-06T09:25:51.833Z",
+        "id": 16,
+        "commentsCount": 0
+    },
+    {
+        "title": "인피니트 스크롤링 ",
+        "content": "확인!!",
+        "nickname": "bakgom",
+        "time": "2024-11-06T09:35:53.148Z",
+        "id": 17,
+        "commentsCount": 0,
+        "updatedAt": "2024-11-06T09:41:32.647Z"
+    },
+    {
+        "title": "HELLO",
+        "content": "HELLLLLLO",
+        "nickname": "bakgomtest",
+        "time": "2024-11-08T06:33:22.118Z",
+        "id": 18,
+        "commentsCount": 0
+    },
+    {
+        "title": "123",
+        "content": "123123",
+        "nickname": "bakgomtest",
+        "time": "2024-11-08T06:33:52.248Z",
+        "id": 19,
+        "commentsCount": 0,
+        "updatedAt": "2024-11-08T06:34:37.525Z"
+    },
+    {
+        "title": "321",
+        "content": "321",
+        "nickname": "BAKGOM :)",
+        "time": "2024-11-08T06:34:53.128Z",
+        "id": 20,
+        "commentsCount": 0
+    }
 ]

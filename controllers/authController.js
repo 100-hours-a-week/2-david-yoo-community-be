@@ -8,22 +8,38 @@ export const signup = async (req, res) => {
     const userData = { email, password, nickname };
 
     try {
+        const filePath = path.join(process.cwd(), 'data', 'userInfo.json');
+
+        // 파일 읽기
+        const data = await fs.promises.readFile(filePath, 'utf8');
+        const users = data ? JSON.parse(data) : [];
+
+        // 이메일 중복 체크
+        const existingUser = users.find(user => user.email === email);
+        if (existingUser) {
+            return res.status(400).json({
+                success: false,
+                message: '이미 사용 중인 이메일입니다.',
+            });
+        }
+
+        // 비밀번호 해시화 및 사용자 추가
         const hashedPassword = await bcrypt.hash(password, 10);
         userData.password = hashedPassword;
+        users.push(userData);
 
-        const filePath = path.join(process.cwd(), 'data', 'userInfo.json');
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            if (err) return res.status(500).send('파일 읽기 오류');
-            let users = data ? JSON.parse(data) : [];
-            users.push(userData);
-
-            fs.writeFile(filePath, JSON.stringify(users, null, 2), err => {
-                if (err) return res.status(500).send('파일 저장 오류');
-                res.status(201).send({ message: '회원가입 성공' });
-            });
+        // 파일 저장
+        await fs.promises.writeFile(filePath, JSON.stringify(users, null, 2));
+        res.status(201).json({
+            success: true,
+            message: '회원가입 성공',
         });
     } catch (error) {
-        res.status(500).send('서버 오류');
+        console.error('회원가입 오류:', error);
+        res.status(500).json({
+            success: false,
+            message: '서버 오류가 발생했습니다.',
+        });
     }
 };
 
