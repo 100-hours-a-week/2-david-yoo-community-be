@@ -79,7 +79,8 @@
         "nickname": "bakgom",
         "time": "2024-11-06T09:25:43.782Z",
         "id": 15,
-        "commentsCount": 0
+        "commentsCount": 0,
+        "views": 1
     },
     {
         "title": "page66",
@@ -95,8 +96,9 @@
         "nickname": "bakgom",
         "time": "2024-11-06T09:35:53.148Z",
         "id": 17,
-        "commentsCount": 0,
-        "updatedAt": "2024-11-06T09:41:32.647Z"
+        "commentsCount": 1,
+        "updatedAt": "2024-11-06T09:41:32.647Z",
+        "views": 7
     },
     {
         "title": "HELLO",
@@ -104,7 +106,8 @@
         "nickname": "bakgomtest",
         "time": "2024-11-08T06:33:22.118Z",
         "id": 18,
-        "commentsCount": 0
+        "commentsCount": 5,
+        "views": 3
     },
     {
         "title": "123",
@@ -114,7 +117,8 @@
         "id": 19,
         "commentsCount": 1,
         "updatedAt": "2024-11-08T06:34:37.525Z",
-        "likeCount": 1
+        "likeCount": 1,
+        "views": 1
     },
     {
         "title": "321",
@@ -131,6 +135,7 @@
         "time": "2024-11-11T02:39:58.500Z",
         "id": 21,
         "commentsCount": 0,
-        "likeCount": 12
+        "likeCount": 12,
+        "views": 1
     }
 ]
