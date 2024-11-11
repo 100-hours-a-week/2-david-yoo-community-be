@@ -112,8 +112,9 @@
         "nickname": "bakgomtest",
         "time": "2024-11-08T06:33:52.248Z",
         "id": 19,
-        "commentsCount": 0,
-        "updatedAt": "2024-11-08T06:34:37.525Z"
+        "commentsCount": 1,
+        "updatedAt": "2024-11-08T06:34:37.525Z",
+        "likeCount": 1
     },
     {
         "title": "321",
@@ -122,5 +123,14 @@
         "time": "2024-11-08T06:34:53.128Z",
         "id": 20,
         "commentsCount": 0
+    },
+    {
+        "title": "321",
+        "content": "321",
+        "nickname": "Bakgom :-)",
+        "time": "2024-11-11T02:39:58.500Z",
+        "id": 21,
+        "commentsCount": 0,
+        "likeCount": 12
     }
 ]

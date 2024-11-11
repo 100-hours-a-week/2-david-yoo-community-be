@@ -9,6 +9,7 @@ import authRoutes from './routes/authRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
+import likeRoutes from './routes/likeRoutes.js';
 
 const app = express();
 const PORT = 3000;
@@ -62,6 +63,7 @@ app.use('/auth', authRoutes);
 app.use('/posts', postRoutes);
 app.use('/user', userRoutes);
 app.use('/api', commentRoutes);
+app.use('/api', likeRoutes);
 
 app.listen(PORT, () =>
     console.log(`서버가 http://localhost:${PORT} 에서 실행 중입니다.`),
