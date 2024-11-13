@@ -154,39 +154,85 @@ export const getPostById = async (req, res) => {
 
 // 게시물 업데이트 로직
 export const updatePost = async (req, res) => {
-    const postId = parseInt(req.params.id, 10);
-    const { title, content, nickname } = req.body;
-
-    try {
-        const data = await fs.promises.readFile('data/post-data.json', 'utf8');
-        const posts = JSON.parse(data || '[]');
-        const postIndex = posts.findIndex(p => p.id === postId);
-
-        if (postIndex === -1) {
-            return res.status(404).send('게시글을 찾을 수 없습니다.');
+    upload(req, res, async err => {
+        if (err) {
+            console.error('파일 업로드 에러:', err);
+            return res
+                .status(400)
+                .json({ error: '파일 업로드에 실패했습니다.' });
         }
 
-        posts[postIndex] = {
-            ...posts[postIndex],
-            title: title || posts[postIndex].title,
-            content: content || posts[postIndex].content,
-            nickname: nickname || posts[postIndex].nickname,
-            updatedAt: new Date().toISOString(),
-        };
+        const postId = parseInt(req.params.id, 10);
+        const { title, content, nickname } = req.body;
 
-        await fs.promises.writeFile(
-            'data/post-data.json',
-            JSON.stringify(posts, null, 2),
-        );
+        try {
+            // 기존 게시글 데이터 읽기
+            const data = await fs.promises.readFile(
+                'data/post-data.json',
+                'utf8',
+            );
+            const posts = JSON.parse(data || '[]');
+            const postIndex = posts.findIndex(p => p.id === postId);
 
-        res.json({
-            success: true,
-            post: posts[postIndex],
-        });
-    } catch (err) {
-        console.error('Error updating post:', err);
-        return res.status(500).send('서버 오류');
-    }
+            if (postIndex === -1) {
+                return res.status(404).send('게시글을 찾을 수 없습니다.');
+            }
+
+            // 기존 게시글의 이미지 파일이 있고, 새 이미지가 업로드된 경우 기존 이미지 삭제
+            if (posts[postIndex].image && req.file) {
+                const oldImagePath = path.join(
+                    'uploads',
+                    posts[postIndex].image,
+                );
+                try {
+                    await fs.promises.unlink(oldImagePath);
+                } catch (error) {
+                    console.error('기존 이미지 삭제 실패:', error);
+                }
+            }
+
+            // 게시글 업데이트
+            posts[postIndex] = {
+                ...posts[postIndex],
+                title: title || posts[postIndex].title,
+                content: content || posts[postIndex].content,
+                nickname: nickname || posts[postIndex].nickname,
+                updatedAt: new Date().toISOString(),
+                // 새 이미지가 있으면 업데이트, 없으면 기존 이미지 유지
+                image: req.file ? req.file.filename : posts[postIndex].image,
+            };
+
+            // 업데이트된 게시글 저장
+            await fs.promises.writeFile(
+                'data/post-data.json',
+                JSON.stringify(posts, null, 2),
+            );
+
+            // 응답에 이미지 데이터 포함
+            if (posts[postIndex].image) {
+                try {
+                    const imagePath = path.join(
+                        'uploads',
+                        posts[postIndex].image,
+                    );
+                    const imageData = await fs.promises.readFile(imagePath);
+                    posts[postIndex].imageData =
+                        `data:image/jpeg;base64,${imageData.toString('base64')}`;
+                } catch (imageErr) {
+                    console.error('이미지 로드 실패:', imageErr);
+                    posts[postIndex].imageData = null;
+                }
+            }
+
+            res.json({
+                success: true,
+                post: posts[postIndex],
+            });
+        } catch (err) {
+            console.error('게시글 업데이트 에러:', err);
+            return res.status(500).send('서버 오류');
+        }
+    });
 };
 
 // 게시물 삭제 로직
