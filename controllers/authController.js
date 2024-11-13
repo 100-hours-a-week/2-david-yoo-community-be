@@ -43,6 +43,41 @@ export const signup = async (req, res) => {
     }
 };
 
+export const withdrawUser = async (req, res) => {
+    const { email } = req.body;
+    const filePath = path.join(process.cwd(), 'data', 'userInfo.json');
+
+    try {
+        const data = await fs.promises.readFile(filePath, 'utf8');
+        let users = JSON.parse(data || '[]');
+        // 해당 이메일을 가진 사용자 찾기
+        const userIndex = users.findIndex(user => user.email === email);
+        if (userIndex === -1) {
+            return res.status(404).json({
+                success: false,
+                message: '사용자를 찾을 수 없습니다.',
+            });
+        }
+        // 사용자 제거
+        users.splice(userIndex, 1);
+        await fs.promises.writeFile(filePath, JSON.stringify(users, null, 2));
+        // 세션 삭제
+        if (req.session) {
+            req.session.destroy();
+        }
+        res.status(200).json({
+            success: true,
+            message: '회원 탈퇴가 완료되었습니다.',
+        });
+    } catch (error) {
+        console.error('회원 탈퇴 오류:', error);
+        res.status(500).json({
+            success: false,
+            message: '서버 오류가 발생했습니다.',
+        });
+    }
+};
+
 // 유저 인증을 확인하는 미들웨어
 export const isAuthenticated = (req, res, next) => {
     if (req.session.user) {
