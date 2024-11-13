@@ -1,28 +1,67 @@
 import fs from 'fs';
 import multer from 'multer';
-const upload = multer();
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Multer 설정
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadDir = 'uploads/';
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir);
+        }
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    },
+});
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB 제한
+    },
+}).single('image'); // single 미들웨어를 여기서 정의
+
+// 파일 필터 설정
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('지원하지 않는 파일 형식입니다.'), false);
+    }
+};
 
 // 게시물 생성 로직
-export const createPost = [
-    upload.none(),
-    async (req, res) => {
+export const createPost = async (req, res) => {
+    upload(req, res, async err => {
+        if (err) {
+            console.error('파일 업로드 에러:', err);
+            return res
+                .status(400)
+                .json({ error: '파일 업로드에 실패했습니다.' });
+        }
+
         try {
-            console.log('Parsed Form Data:', req.body);
             const { title, content, nickname } = req.body;
+
             if (!title || !content || !nickname) {
-                console.log('Missing required fields:', {
-                    title,
-                    content,
-                    nickname,
-                });
                 return res.status(400).json({
                     error: '필수 필드가 누락되었습니다.',
-                    receivedData: req.body,
                 });
             }
 
             const time = new Date().toISOString();
-            const newPost = { title, content, nickname, time };
+            const newPost = {
+                title,
+                content,
+                nickname,
+                time,
+                image: req.file ? req.file.filename : null, // 파일명만 저장
+            };
 
             const data = await fs.promises.readFile(
                 'data/post-data.json',
@@ -32,6 +71,8 @@ export const createPost = [
             const maxId =
                 posts.length > 0 ? Math.max(...posts.map(post => post.id)) : 0;
             newPost.id = maxId + 1;
+            newPost.views = 0;
+            newPost.likeCount = 0;
             newPost.commentsCount = 0;
 
             posts.push(newPost);
@@ -45,11 +86,11 @@ export const createPost = [
                 post: newPost,
             });
         } catch (err) {
-            console.error('Error processing post creation:', err);
-            return res.status(500).send('서버 오류');
+            console.error('게시글 생성 에러:', err);
+            return res.status(500).json({ error: '서버 오류' });
         }
-    },
-];
+    });
+};
 
 // 게시물 목록 조회 로직
 export const getPosts = async (req, res) => {
@@ -80,7 +121,6 @@ export const getPosts = async (req, res) => {
     }
 };
 
-// 게시물 상세 조회 로직
 export const getPostById = async (req, res) => {
     const postId = parseInt(req.params.id, 10);
 
@@ -89,13 +129,25 @@ export const getPostById = async (req, res) => {
         const posts = JSON.parse(data || '[]');
         const post = posts.find(p => p.id === postId);
 
-        if (post) {
-            res.json(post);
-        } else {
-            res.status(404).send('게시글을 찾을 수 없습니다.');
+        if (!post) {
+            return res.status(404).send('게시글을 찾을 수 없습니다.');
         }
+
+        // 이미지가 있는 경우 Base64로 변환
+        if (post.image) {
+            try {
+                const imagePath = path.join('uploads', post.image);
+                const imageData = await fs.promises.readFile(imagePath);
+                post.imageData = `data:image/jpeg;base64,${imageData.toString('base64')}`;
+            } catch (imageErr) {
+                console.error('이미지 로드 실패:', imageErr);
+                post.imageData = null;
+            }
+        }
+
+        res.json(post);
     } catch (err) {
-        console.error('Error fetching post by ID:', err);
+        console.error('게시글 조회 에러:', err);
         return res.status(500).send('서버 오류');
     }
 };

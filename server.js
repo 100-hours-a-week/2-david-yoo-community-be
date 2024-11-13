@@ -1,10 +1,10 @@
+import fs from 'fs';
+import path from 'path';
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
 import session from 'express-session';
-
 import authRoutes from './routes/authRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -25,9 +25,9 @@ const upload = multer({ storage });
 
 app.use(
     cors({
-        origin: 'http://127.0.0.1:5500', // 허용할 출처
-        methods: ['GET', 'POST', 'PUT', 'DELETE'], // 허용할 HTTP 메서드
-        credentials: true, // 쿠키/세션을 위한 설정
+        origin: 'http://127.0.0.1:5500', // 모든 출처 허용
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+        credentials: true,
     }),
 );
 app.use(express.json());
@@ -40,22 +40,15 @@ app.get('/', (req, res) =>
 // 세션
 app.use(
     session({
-        secret: 'my-secret-key', // 알아서 바꿔주기
+        secret: 'my-secret-key',
         resave: false,
         saveUninitialized: false,
         cookie: {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: false,
             maxAge: 24 * 60 * 60 * 1000, // 24시간 후 세션 종료
             sameSite: 'none',
         },
-    }),
-);
-
-app.use(
-    cors({
-        origin: 'http://127.0.0.1:5500',
-        credentials: true,
     }),
 );
 
@@ -66,6 +59,29 @@ app.use('/user', userRoutes);
 app.use('/api', commentRoutes);
 app.use('/api', likeRoutes);
 app.use('/api/views', viewRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// 이미지 요청을 처리하는 라우트
+app.get('/posts/image/:imageName', (req, res) => {
+    const imagePath = path.join(__dirname, 'uploads', req.params.imageName); // 이미지 경로 설정
+
+    // 이미지 파일을 읽고 Base64로 변환
+    fs.readFile(imagePath, (err, data) => {
+        if (err) {
+            return res.status(500).send('이미지를 읽을 수 없습니다.');
+        }
+
+        // 이미지를 Base64로 인코딩
+        const base64Image = Buffer.from(data).toString('base64');
+
+        // CORS 설정
+        res.setHeader('Access-Control-Allow-Origin', '*'); // 모든 출처에서 접근 가능하도록 설정
+        res.setHeader('Content-Type', 'application/json'); // 응답 타입을 JSON으로 설정
+
+        // Base64로 인코딩된 이미지를 JSON 형식으로 응답
+        res.json({ image: base64Image });
+    });
+});
 
 app.listen(PORT, () =>
     console.log(`서버가 http://localhost:${PORT} 에서 실행 중입니다.`),

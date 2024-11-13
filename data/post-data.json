@@ -1,20 +1,11 @@
 [
     {
-        "id": 2,
-        "title": "닉네임 잘 나옴?",
-        "content": "제발...ㅋㅋㅋㅋ123",
-        "nickname": "day2",
-        "time": "2024-11-04T13:57:52.206Z",
-        "views": 0,
-        "commentsCount": 0
-    },
-    {
         "id": 4,
         "title": "123",
         "content": "123123",
         "nickname": "day2",
         "time": "2024-11-04T14:01:04.226Z",
-        "views": 0,
+        "views": 1,
         "commentsCount": 0
     },
     {
@@ -31,7 +22,8 @@
         "content": "수정",
         "nickname": "null",
         "time": "2024-11-05T13:13:08.680Z",
-        "id": 9
+        "id": 9,
+        "views": 2
     },
     {
         "title": "hello",
@@ -47,7 +39,8 @@
         "nickname": "헬로월드",
         "time": "2024-11-05T13:26:08.376Z",
         "id": 11,
-        "commentsCount": 1
+        "commentsCount": 1,
+        "views": 1
     },
     {
         "title": "page2",
@@ -55,7 +48,8 @@
         "nickname": "bakgom",
         "time": "2024-11-06T09:25:18.790Z",
         "id": 12,
-        "commentsCount": 0
+        "commentsCount": 0,
+        "views": 1
     },
     {
         "title": "page33",
@@ -63,7 +57,8 @@
         "nickname": "bakgom",
         "time": "2024-11-06T09:25:25.297Z",
         "id": 13,
-        "commentsCount": 0
+        "commentsCount": 0,
+        "views": 1
     },
     {
         "title": "page44",
@@ -80,15 +75,7 @@
         "time": "2024-11-06T09:25:43.782Z",
         "id": 15,
         "commentsCount": 0,
-        "views": 1
-    },
-    {
-        "title": "page66",
-        "content": "66",
-        "nickname": "bakgom",
-        "time": "2024-11-06T09:25:51.833Z",
-        "id": 16,
-        "commentsCount": 0
+        "views": 3
     },
     {
         "title": "인피니트 스크롤링 ",
@@ -98,7 +85,7 @@
         "id": 17,
         "commentsCount": 1,
         "updatedAt": "2024-11-06T09:41:32.647Z",
-        "views": 7
+        "views": 10
     },
     {
         "title": "HELLO",
@@ -107,35 +94,71 @@
         "time": "2024-11-08T06:33:22.118Z",
         "id": 18,
         "commentsCount": 5,
-        "views": 3
+        "views": 7
     },
     {
         "title": "123",
-        "content": "123123",
-        "nickname": "bakgomtest",
-        "time": "2024-11-08T06:33:52.248Z",
+        "content": "123",
+        "nickname": "Bakgom :-)",
+        "time": "2024-11-12T14:58:22.494Z",
+        "image": null,
         "id": 19,
-        "commentsCount": 1,
-        "updatedAt": "2024-11-08T06:34:37.525Z",
-        "likeCount": 1,
-        "views": 1
+        "commentsCount": 0,
+        "views": 4
     },
     {
-        "title": "321",
-        "content": "321",
-        "nickname": "BAKGOM :)",
-        "time": "2024-11-08T06:34:53.128Z",
+        "title": "ㅂㅈㄷ",
+        "content": "ㅂㅈㄷ",
+        "nickname": "Bakgom :-)",
+        "time": "2024-11-12T15:26:33.904Z",
+        "image": "/uploads/1731425193900-723884841.jpg",
         "id": 20,
+        "commentsCount": 0,
+        "views": 4
+    },
+    {
+        "title": "ㅂㅈㄷ",
+        "content": "ㅂㅈㄷ",
+        "nickname": "Bakgom :-)",
+        "time": "2024-11-13T00:34:59.224Z",
+        "image": "1731458099220-878572528.jpg",
+        "id": 21,
+        "views": 8,
+        "likeCount": 0,
         "commentsCount": 0
     },
     {
-        "title": "321",
-        "content": "321",
+        "title": "123",
+        "content": "123",
         "nickname": "Bakgom :-)",
-        "time": "2024-11-11T02:39:58.500Z",
-        "id": 21,
-        "commentsCount": 0,
-        "likeCount": 12,
-        "views": 1
+        "time": "2024-11-13T00:46:04.734Z",
+        "image": "1731458764729-39389733.jpg",
+        "id": 22,
+        "views": 7,
+        "likeCount": 0,
+        "commentsCount": 0
+    },
+    {
+        "title": "123",
+        "content": "123",
+        "nickname": "Bakgom :-)",
+        "time": "2024-11-13T00:48:56.179Z",
+        "image": "1731458936174-706791994.jpg",
+        "id": 23,
+        "views": 6,
+        "likeCount": 0,
+        "commentsCount": 1,
+        "updatedAt": "2024-11-13T01:05:35.444Z"
+    },
+    {
+        "title": "123",
+        "content": "123",
+        "nickname": "Bakgom :-)",
+        "time": "2024-11-13T00:53:10.245Z",
+        "image": "1731459190243-514521639.png",
+        "id": 24,
+        "views": 9,
+        "likeCount": 0,
+        "commentsCount": 0
     }
 ]

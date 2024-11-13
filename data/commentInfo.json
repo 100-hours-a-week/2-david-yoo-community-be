@@ -70,13 +70,6 @@
         "time": "2024-11-11T02:58:35.318Z"
     },
     {
-        "id": 14,
-        "postId": "18",
-        "content": "123",
-        "author": "User",
-        "time": "2024-11-11T04:30:37.269Z"
-    },
-    {
         "id": 12,
         "postId": "18",
         "content": "123",
@@ -89,5 +82,19 @@
         "content": "123",
         "author": "Bakgom :-)",
         "time": "2024-11-11T04:50:17.821Z"
+    },
+    {
+        "id": 13,
+        "postId": "21",
+        "content": "gooood",
+        "author": "Bakgom :-)",
+        "time": "2024-11-11T05:18:08.113Z"
+    },
+    {
+        "id": 14,
+        "postId": "23",
+        "content": "좋아욤",
+        "author": "Bakgom :-)",
+        "time": "2024-11-13T01:06:35.118Z"
     }
 ]
