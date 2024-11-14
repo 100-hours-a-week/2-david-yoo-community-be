@@ -6,7 +6,7 @@
         "time": "2024-11-05T13:26:08.376Z",
         "id": 11,
         "commentsCount": 1,
-        "views": 2
+        "views": 3
     },
     {
         "title": "인피니트 스크롤링 ",
@@ -24,6 +24,7 @@
         "nickname": "bakgomtest",
         "time": "2024-11-08T06:33:22.118Z",
         "id": 18,
+        "likeCount": 88,
         "commentsCount": 5,
         "views": 9,
         "updatedAt": "2024-11-13T07:41:20.025Z",
@@ -36,7 +37,7 @@
         "time": "2024-11-13T00:46:04.734Z",
         "image": "1731458764729-39389733.jpg",
         "id": 22,
-        "views": 10,
+        "views": 12,
         "likeCount": 0,
         "commentsCount": 3,
         "updatedAt": "2024-11-13T07:39:26.055Z"
@@ -48,7 +49,7 @@
         "time": "2024-11-13T00:48:56.179Z",
         "image": "1731483395838-979620255.png",
         "id": 23,
-        "views": 16,
+        "views": 17,
         "likeCount": 0,
         "commentsCount": 2,
         "updatedAt": "2024-11-13T07:38:32.327Z"
@@ -60,9 +61,9 @@
         "time": "2024-11-13T00:53:10.245Z",
         "image": "1731483431482-82314266.jpg",
         "id": 24,
-        "views": 32,
+        "views": 47,
         "likeCount": 0,
-        "commentsCount": 3,
+        "commentsCount": 6,
         "updatedAt": "2024-11-13T07:37:37.529Z"
     }
 ]

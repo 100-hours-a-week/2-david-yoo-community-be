@@ -2,13 +2,37 @@ import bcrypt from 'bcrypt';
 import fs from 'fs';
 import path from 'path';
 
+// 프로필 이미지 저장을 위한 디렉토리 관리 함수
+const ensureUploadDirectory = () => {
+    const uploadDir = path.join(process.cwd(), 'uploads');
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    return uploadDir;
+};
+
 // 회원가입 로직
 export const signup = async (req, res) => {
-    const { email, password, nickname } = req.body;
-    const userData = { email, password, nickname };
+    const { email, password, nickname, profileImage } = req.body;
+    let profileImageName = 'default.webp'; // 기본 이미지 이름으로 초기화
 
     try {
         const filePath = path.join(process.cwd(), 'data', 'userInfo.json');
+
+        // 프로필 이미지 처리
+        if (profileImage && profileImage !== 'default.webp') {
+            const uploadDir = ensureUploadDirectory();
+            // Base64 이미지 데이터 처리
+            const base64Data = profileImage.replace(
+                /^data:image\/\w+;base64,/,
+                '',
+            );
+            const imageBuffer = Buffer.from(base64Data, 'base64');
+            profileImageName = `${email}-${Date.now()}.png`;
+            const imagePath = path.join(uploadDir, profileImageName);
+
+            await fs.promises.writeFile(imagePath, imageBuffer);
+        }
 
         // 파일 읽기
         const data = await fs.promises.readFile(filePath, 'utf8');
@@ -25,7 +49,12 @@ export const signup = async (req, res) => {
 
         // 비밀번호 해시화 및 사용자 추가
         const hashedPassword = await bcrypt.hash(password, 10);
-        userData.password = hashedPassword;
+        const userData = {
+            email,
+            password: hashedPassword,
+            nickname,
+            profileImage: profileImageName,
+        };
         users.push(userData);
 
         // 파일 저장
