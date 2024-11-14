@@ -63,22 +63,15 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // 이미지 요청을 처리하는 라우트
 app.get('/posts/image/:imageName', (req, res) => {
-    const imagePath = path.join(__dirname, 'uploads', req.params.imageName); // 이미지 경로 설정
-
-    // 이미지 파일을 읽고 Base64로 변환
+    const imagePath = path.join(__dirname, 'uploads', req.params.imageName);
     fs.readFile(imagePath, (err, data) => {
         if (err) {
             return res.status(500).send('이미지를 읽을 수 없습니다.');
         }
-
-        // 이미지를 Base64로 인코딩
         const base64Image = Buffer.from(data).toString('base64');
-
         // CORS 설정
-        res.setHeader('Access-Control-Allow-Origin', '*'); // 모든 출처에서 접근 가능하도록 설정
-        res.setHeader('Content-Type', 'application/json'); // 응답 타입을 JSON으로 설정
-
-        // Base64로 인코딩된 이미지를 JSON 형식으로 응답
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Content-Type', 'application/json');
         res.json({ image: base64Image });
     });
 });
