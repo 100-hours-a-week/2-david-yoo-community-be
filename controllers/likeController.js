@@ -17,20 +17,22 @@ async function ensureLikesFile() {
     }
 }
 
-// 유저 ID -> email 가져오기 함수
-function getUserIdentifier(req) {
-    if (!req.session.user) {
-        throw new Error('인증되지 않은 사용자입니다.');
-    }
-    // 이메일을 유저 식별자로 사용
-    return req.session.user.email;
-}
+// // 유저 ID -> email 가져오기 함수
+// function getUserIdentifier(req) {
+//     if (!req.session.user) {
+//         throw new Error('인증되지 않은 사용자입니다.');
+//     }
+//     // 이메일을 유저 식별자로 사용
+//     return req.session.user.email;
+// }
 
 // 좋아요 토글 컨트롤러
 export const toggleLike = async (req, res) => {
     try {
         const { postId } = req.params;
-        const userId = getUserIdentifier(req);
+        // const userId = getUserIdentifier(req);
+        // 일단 유저아이디 그냥 다 random으로 만듬
+        const userId = Math.random().toString(36).substring(7);;
 
         await ensureLikesFile();
 
@@ -89,7 +91,9 @@ export const toggleLike = async (req, res) => {
 export const checkLikeStatus = async (req, res) => {
     try {
         const { postId } = req.params;
-        const userId = getUserIdentifier(req);
+        // const userId = getUserIdentifier(req);
+        // 일단 유저아이디 그냥 다 random으로 만듬
+        const userId = Math.random().toString(36).substring(7);;
 
         await ensureLikesFile();
 

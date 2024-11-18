@@ -37,8 +37,8 @@
     "time": "2024-11-13T00:46:04.734Z",
     "image": "1731458764729-39389733.jpg",
     "id": 22,
-    "views": 13,
-    "likeCount": 0,
+    "views": 14,
+    "likeCount": 1,
     "commentsCount": 3,
     "updatedAt": "2024-11-13T07:39:26.055Z"
   },
@@ -49,8 +49,8 @@
     "time": "2024-11-13T00:48:56.179Z",
     "image": "1731483395838-979620255.png",
     "id": 23,
-    "views": 19,
-    "likeCount": 0,
+    "views": 21,
+    "likeCount": 1,
     "commentsCount": 3,
     "updatedAt": "2024-11-13T07:38:32.327Z"
   },
@@ -61,8 +61,8 @@
     "time": "2024-11-13T00:53:10.245Z",
     "image": "1731483431482-82314266.jpg",
     "id": 24,
-    "views": 89,
-    "likeCount": 77,
+    "views": 94,
+    "likeCount": 30,
     "commentsCount": 9,
     "updatedAt": "2024-11-13T07:37:37.529Z"
   },
@@ -95,8 +95,8 @@
     "time": "2024-11-16T09:26:47.493Z",
     "image": "1731749207488-567227141.jpg",
     "id": 29,
-    "views": 3,
-    "likeCount": 3,
+    "views": 4,
+    "likeCount": 19,
     "commentsCount": 0
   },
   {
@@ -106,8 +106,8 @@
     "time": "2024-11-16T09:31:06.439Z",
     "image": "1731749466434-212153588.jpg",
     "id": 30,
-    "views": 22,
-    "likeCount": 12,
+    "views": 26,
+    "likeCount": 1,
     "commentsCount": 0
   }
 ]
