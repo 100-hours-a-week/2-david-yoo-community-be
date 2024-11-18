@@ -107,15 +107,34 @@ export const withdrawUser = async (req, res) => {
     }
 };
 
-// 유저 인증을 확인하는 미들웨어
+// 유저 인증을 확인하는 미들웨어, TODO: 세션 인증 구현은 끝, 근데 임시방편으로 고쳐야함
 export const isAuthenticated = (req, res, next) => {
-    if (req.session.user) {
+    // if (req.session.user) {
+    //     next();
+    // } else {
+    //     res.status(400).json({ success: false, message: '인증이 필요합니다.' });
+    // }
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).json({
+            success: false,
+            message: '인증이 필요합니다.'
+        })
+    }
+
+    try{
+        const userEmail = authHeader.split(' ')[1];
+        req.user = {email: userEmail};
         next();
-    } else {
-        res.status(400).json({ success: false, message: '인증이 필요합니다.' });
+    } catch (error) {
+        res.status(401).json({
+            success: false,
+            message: '인증이 유효하지 않습니다.'
+        })
     }
 };
 
+// 로그인
 export const login = async (req, res) => {
     const { email, password } = req.body;
     const filePath = path.join(process.cwd(), 'data', 'userInfo.json');
@@ -140,15 +159,22 @@ export const login = async (req, res) => {
             });
         }
 
-        // 유저 세션
-        req.session.user = {
+        // TODO: 유저 세션은 이렇게 설정하면 됨, 지금 당장의 임시방편으로 그냥 전달
+        // req.session.user = {
+        //     email: user.email,
+        //     nickname: user.nickname,
+        // };
+
+        // 세션 대신 클라이언트에 전달하는 정보
+        const userInfo = {
             email: user.email,
-            nickname: user.nickname,
-        };
+            nickname: user.nickname
+        }
 
         res.status(200).json({
             success: true,
-            nickname: user.nickname,
+            // nickname: user.nickname,
+            user: userInfo
         });
     } catch (error) {
         res.status(500).json({

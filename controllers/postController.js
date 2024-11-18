@@ -22,7 +22,7 @@ const upload = multer({
     limits: {
         fileSize: 5 * 1024 * 1024, // 5MB 제한
     },
-}).single('image'); // single 미들웨어를 여기서 정의
+}).single('image');
 
 // 파일 필터 설정
 const fileFilter = (req, file, cb) => {
