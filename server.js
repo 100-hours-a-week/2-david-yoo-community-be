@@ -25,7 +25,7 @@ const upload = multer({ storage });
 
 app.use(
     cors({
-        origin: 'http://127.0.0.1:5500', // 모든 출처 허용
+        origin: 'http://127.0.0.1:5500',
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
         credentials: true,
     }),

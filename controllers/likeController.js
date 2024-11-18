@@ -17,7 +17,7 @@ async function ensureLikesFile() {
     }
 }
 
-// 유저 ID 가져오기 헬퍼 함수
+// 유저 ID -> email 가져오기 함수
 function getUserIdentifier(req) {
     if (!req.session.user) {
         throw new Error('인증되지 않은 사용자입니다.');
@@ -75,7 +75,6 @@ export const toggleLike = async (req, res) => {
             postsData[postIndex].likeCount = likeCount;
             await fs.writeFile(POSTS_PATH, JSON.stringify(postsData, null, 2));
         }
-
         res.json({ isLiked, likeCount });
     } catch (error) {
         if (error.message === '인증되지 않은 사용자입니다.') {
