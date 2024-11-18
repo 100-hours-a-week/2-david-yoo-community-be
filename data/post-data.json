@@ -1,69 +1,113 @@
 [
-    {
-        "title": "안녕세상아",
-        "content": "hello world",
-        "nickname": "헬로월드",
-        "time": "2024-11-05T13:26:08.376Z",
-        "id": 11,
-        "commentsCount": 1,
-        "views": 3
-    },
-    {
-        "title": "인피니트 스크롤링 ",
-        "content": "확인!!",
-        "nickname": "bakgom",
-        "time": "2024-11-06T09:35:53.148Z",
-        "id": 17,
-        "commentsCount": 1,
-        "updatedAt": "2024-11-06T09:41:32.647Z",
-        "views": 11
-    },
-    {
-        "title": "HELLO",
-        "content": "HELLLLLLO",
-        "nickname": "bakgomtest",
-        "time": "2024-11-08T06:33:22.118Z",
-        "id": 18,
-        "likeCount": 88,
-        "commentsCount": 5,
-        "views": 9,
-        "updatedAt": "2024-11-13T07:41:20.025Z",
-        "image": "1731483680018-874351643.jpg"
-    },
-    {
-        "title": "내 커뮤니티는 완성도가 높은가?",
-        "content": "댓글 부탁해용 ㅎㅎ",
-        "nickname": "Bakgom :-)",
-        "time": "2024-11-13T00:46:04.734Z",
-        "image": "1731458764729-39389733.jpg",
-        "id": 22,
-        "views": 12,
-        "likeCount": 0,
-        "commentsCount": 3,
-        "updatedAt": "2024-11-13T07:39:26.055Z"
-    },
-    {
-        "title": "우리나라의 아름다움",
-        "content": "너무 이쁘네요 ㅎㅎ",
-        "nickname": "Bakgom :-)",
-        "time": "2024-11-13T00:48:56.179Z",
-        "image": "1731483395838-979620255.png",
-        "id": 23,
-        "views": 17,
-        "likeCount": 0,
-        "commentsCount": 2,
-        "updatedAt": "2024-11-13T07:38:32.327Z"
-    },
-    {
-        "title": "맨유 우승",
-        "content": "2024 FA컵의 주인은 맨체스터 유나이티드입니다",
-        "nickname": "Bakgom :-)",
-        "time": "2024-11-13T00:53:10.245Z",
-        "image": "1731483431482-82314266.jpg",
-        "id": 24,
-        "views": 47,
-        "likeCount": 0,
-        "commentsCount": 6,
-        "updatedAt": "2024-11-13T07:37:37.529Z"
-    }
+  {
+    "title": "안녕세상아",
+    "content": "hello world",
+    "nickname": "헬로월드",
+    "time": "2024-11-05T13:26:08.376Z",
+    "id": 11,
+    "commentsCount": 1,
+    "views": 3
+  },
+  {
+    "title": "인피니트 스크롤링 ",
+    "content": "확인!!",
+    "nickname": "bakgom",
+    "time": "2024-11-06T09:35:53.148Z",
+    "id": 17,
+    "commentsCount": 1,
+    "updatedAt": "2024-11-06T09:41:32.647Z",
+    "views": 11
+  },
+  {
+    "title": "HELLO",
+    "content": "HELLLLLLO",
+    "nickname": "bakgomtest",
+    "time": "2024-11-08T06:33:22.118Z",
+    "id": 18,
+    "likeCount": 88,
+    "commentsCount": 5,
+    "views": 9,
+    "updatedAt": "2024-11-13T07:41:20.025Z",
+    "image": "1731483680018-874351643.jpg"
+  },
+  {
+    "title": "내 커뮤니티는 완성도가 높은가?",
+    "content": "댓글 부탁해용 ㅎㅎ",
+    "nickname": "Bakgom :-)",
+    "time": "2024-11-13T00:46:04.734Z",
+    "image": "1731458764729-39389733.jpg",
+    "id": 22,
+    "views": 13,
+    "likeCount": 0,
+    "commentsCount": 3,
+    "updatedAt": "2024-11-13T07:39:26.055Z"
+  },
+  {
+    "title": "우리나라의 아름다움",
+    "content": "너무 이쁘네요 ㅎㅎ",
+    "nickname": "Bakgom :-)",
+    "time": "2024-11-13T00:48:56.179Z",
+    "image": "1731483395838-979620255.png",
+    "id": 23,
+    "views": 19,
+    "likeCount": 0,
+    "commentsCount": 3,
+    "updatedAt": "2024-11-13T07:38:32.327Z"
+  },
+  {
+    "title": "맨유 우승",
+    "content": "2024 FA컵의 주인은 맨체스터 유나이티드입니다",
+    "nickname": "Bakgom :-)",
+    "time": "2024-11-13T00:53:10.245Z",
+    "image": "1731483431482-82314266.jpg",
+    "id": 24,
+    "views": 89,
+    "likeCount": 77,
+    "commentsCount": 9,
+    "updatedAt": "2024-11-13T07:37:37.529Z"
+  },
+  {
+    "title": "123",
+    "content": "123",
+    "nickname": "test",
+    "time": "2024-11-14T17:18:20.098Z",
+    "image": "1731604700096-583480534.png",
+    "id": 27,
+    "views": 4,
+    "likeCount": 0,
+    "commentsCount": 0
+  },
+  {
+    "title": "123",
+    "content": "123",
+    "nickname": "bakgomT",
+    "time": "2024-11-16T09:26:37.573Z",
+    "image": null,
+    "id": 28,
+    "views": 1,
+    "likeCount": 0,
+    "commentsCount": 0
+  },
+  {
+    "title": "123",
+    "content": "123",
+    "nickname": "bakgomT",
+    "time": "2024-11-16T09:26:47.493Z",
+    "image": "1731749207488-567227141.jpg",
+    "id": 29,
+    "views": 3,
+    "likeCount": 3,
+    "commentsCount": 0
+  },
+  {
+    "title": "123",
+    "content": "123",
+    "nickname": "bakgomT",
+    "time": "2024-11-16T09:31:06.439Z",
+    "image": "1731749466434-212153588.jpg",
+    "id": 30,
+    "views": 22,
+    "likeCount": 12,
+    "commentsCount": 0
+  }
 ]
