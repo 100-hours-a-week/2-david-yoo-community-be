@@ -1,15 +1,7 @@
 import bcrypt from 'bcrypt';
 import fs from 'fs';
 import path from 'path';
-
-// 프로필 이미지 저장을 위한 디렉토리 관리 함수
-const ensureUploadDirectory = () => {
-    const uploadDir = path.join(process.cwd(), 'uploads');
-    if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    return uploadDir;
-};
+import { saveBase64Image } from '../utils/fileUtils.js';
 
 // 회원가입 로직
 export const signup = async (req, res) => {
@@ -21,17 +13,7 @@ export const signup = async (req, res) => {
 
         // 프로필 이미지 처리
         if (profileImage && profileImage !== 'default.webp') {
-            const uploadDir = ensureUploadDirectory();
-            // Base64 이미지 데이터 처리
-            const base64Data = profileImage.replace(
-                /^data:image\/\w+;base64,/,
-                '',
-            );
-            const imageBuffer = Buffer.from(base64Data, 'base64');
-            profileImageName = `${email}-${Date.now()}.png`;
-            const imagePath = path.join(uploadDir, profileImageName);
-
-            await fs.promises.writeFile(imagePath, imageBuffer);
+            profileImageName = await saveBase64Image(profileImage, email);
         }
 
         // 파일 읽기
@@ -107,30 +89,23 @@ export const withdrawUser = async (req, res) => {
     }
 };
 
-// 유저 인증을 확인하는 미들웨어, TODO: 세션 인증 구현은 끝, 근데 임시방편으로 고쳐야함
+// 유저 인증을 확인하는 미들웨어
 export const isAuthenticated = (req, res, next) => {
-    // if (req.session.user) {
-    //     next();
-    // } else {
-    //     res.status(400).json({ success: false, message: '인증이 필요합니다.' });
-    // }
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return res.status(401).json({
-            success: false,
-            message: '인증이 필요합니다.'
-        })
+    if (req.session.user) {
+        next();
+    } else {
+        res.status(400).json({ success: false, message: '인증이 필요합니다.' });
     }
 
-    try{
+    try {
         const userEmail = authHeader.split(' ')[1];
-        req.user = {email: userEmail};
+        req.user = { email: userEmail };
         next();
     } catch (error) {
         res.status(401).json({
             success: false,
-            message: '인증이 유효하지 않습니다.'
-        })
+            message: '인증이 유효하지 않습니다.',
+        });
     }
 };
 
@@ -158,23 +133,15 @@ export const login = async (req, res) => {
                 message: '이메일 또는 비밀번호가 올바르지 않습니다.',
             });
         }
-
-        // TODO: 유저 세션은 이렇게 설정하면 됨, 지금 당장의 임시방편으로 그냥 전달
-        // req.session.user = {
-        //     email: user.email,
-        //     nickname: user.nickname,
-        // };
-
-        // 세션 대신 클라이언트에 전달하는 정보
-        const userInfo = {
+        req.session.user = {
             email: user.email,
-            nickname: user.nickname
-        }
+            nickname: user.nickname,
+        };
 
         res.status(200).json({
             success: true,
-            // nickname: user.nickname,
-            user: userInfo
+            nickname: user.nickname,
+            user: req.session.user,
         });
     } catch (error) {
         res.status(500).json({

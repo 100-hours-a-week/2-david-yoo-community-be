@@ -1,42 +1,9 @@
 import fs from 'fs';
-import multer from 'multer';
-import path from 'path';
-
-// Multer 설정
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = 'uploads/';
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir);
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    },
-});
-
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 5 * 1024 * 1024, // 5MB 제한
-    },
-}).single('image');
-
-// 파일 필터 설정
-const fileFilter = (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    if (allowedTypes.includes(file.mimetype)) {
-        cb(null, true);
-    } else {
-        cb(new Error('지원하지 않는 파일 형식입니다.'), false);
-    }
-};
+import { upload, getImageAsBase64, deleteFile } from '../utils/fileUtils.js';
 
 // 게시물 생성 로직
 export const createPost = async (req, res) => {
-    upload(req, res, async err => {
+    upload.single('image')(req, res, async err => {
         if (err) {
             console.error('파일 업로드 에러:', err);
             return res
@@ -135,9 +102,7 @@ export const getPostById = async (req, res) => {
         // 이미지가 있는 경우 Base64로 변환
         if (post.image) {
             try {
-                const imagePath = path.join('uploads', post.image);
-                const imageData = await fs.promises.readFile(imagePath);
-                post.imageData = `data:image/jpeg;base64,${imageData.toString('base64')}`;
+                post.imageData = await getImageAsBase64(post.image);
             } catch (imageErr) {
                 console.error('이미지 로드 실패:', imageErr);
                 post.imageData = null;
@@ -153,7 +118,7 @@ export const getPostById = async (req, res) => {
 
 // 게시물 업데이트 로직
 export const updatePost = async (req, res) => {
-    upload(req, res, async err => {
+    upload.single('image')(req, res, async err => {
         if (err) {
             console.error('파일 업로드 에러:', err);
             return res
@@ -179,10 +144,12 @@ export const updatePost = async (req, res) => {
 
             // 기존 게시글의 이미지 파일이 있고, 새 이미지가 업로드된 경우 기존 이미지 삭제
             if (posts[postIndex].image && req.file) {
-                const oldImagePath = path.join(
-                    'uploads',
-                    posts[postIndex].image,
-                );
+                // const oldImagePath = path.join(
+                //     'uploads',
+                //     posts[postIndex].image,
+                // );
+                await deleteFile(posts[postIndex].image);
+
                 try {
                     await fs.promises.unlink(oldImagePath);
                 } catch (error) {
@@ -210,13 +177,9 @@ export const updatePost = async (req, res) => {
             // 응답에 이미지 데이터 포함
             if (posts[postIndex].image) {
                 try {
-                    const imagePath = path.join(
-                        'uploads',
+                    posts[postIndex].imageData = await getImageAsBase64(
                         posts[postIndex].image,
                     );
-                    const imageData = await fs.promises.readFile(imagePath);
-                    posts[postIndex].imageData =
-                        `data:image/jpeg;base64,${imageData.toString('base64')}`;
                 } catch (imageErr) {
                     console.error('이미지 로드 실패:', imageErr);
                     posts[postIndex].imageData = null;

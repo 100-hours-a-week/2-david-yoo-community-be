@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import fs from 'fs';
 import path from 'path';
+import { saveBase64Image, deleteFile } from '../utils/fileUtils.js';
 
 // 닉네임 업데이트 로직
 export const updateNickname = (req, res) => {
@@ -63,21 +64,10 @@ export const updateProfileImage = async (req, res) => {
         // 새로운 이미지가 업로드된 경우
         if (profileImage && profileImage.startsWith('data:image')) {
             // 이전 이미지 삭제 (기본 이미지가 아닌 경우)
-            if (profileImageName !== 'default.webp') {
-                const oldImagePath = path.join(uploadDir, profileImageName);
-                if (fs.existsSync(oldImagePath)) {
-                    await fs.promises.unlink(oldImagePath);
-                }
-            }
-            const base64Data = profileImage.replace(
-                /^data:image\/\w+;base64,/,
-                '',
-            );
-            const imageBuffer = Buffer.from(base64Data, 'base64');
-            profileImageName = `${email}-${Date.now()}.png`;
-            const imagePath = path.join(uploadDir, profileImageName);
+            await deleteFile(profileImageName);
 
-            await fs.promises.writeFile(imagePath, imageBuffer);
+            // 새 이미지 저장
+            profileImageName = await saveBase64Image(profileImage, email);
             users[userIndex].profileImage = profileImageName;
             await fs.promises.writeFile(
                 filePath,

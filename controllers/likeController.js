@@ -32,7 +32,7 @@ export const toggleLike = async (req, res) => {
         const { postId } = req.params;
         // const userId = getUserIdentifier(req);
         // 일단 유저아이디 그냥 다 random으로 만듬
-        const userId = Math.random().toString(36).substring(7);;
+        const userId = Math.random().toString(36).substring(7);
 
         await ensureLikesFile();
 
@@ -93,7 +93,7 @@ export const checkLikeStatus = async (req, res) => {
         const { postId } = req.params;
         // const userId = getUserIdentifier(req);
         // 일단 유저아이디 그냥 다 random으로 만듬
-        const userId = Math.random().toString(36).substring(7);;
+        const userId = Math.random().toString(36).substring(7);
 
         await ensureLikesFile();
 
