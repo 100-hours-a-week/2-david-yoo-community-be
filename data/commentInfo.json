@@ -2,8 +2,16 @@
     {
         "id": 1,
         "postId": "24",
-        "content": "good",
+        "content": "comment edit is available",
         "author": "bakgom",
-        "time": "2024-11-19T06:59:01.614Z"
+        "time": "2024-11-19T06:59:01.614Z",
+        "lastModified": "2024-11-21T00:32:23.367Z"
+    },
+    {
+        "id": 2,
+        "postId": "24",
+        "content": "댓글 기능은?",
+        "author": "bakgom",
+        "time": "2024-11-21T00:37:50.822Z"
     }
 ]

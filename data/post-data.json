@@ -1,70 +1,70 @@
 [
-  {
-    "title": "안녕세상아",
-    "content": "hello world",
-    "nickname": "헬로월드",
-    "time": "2024-11-05T13:26:08.376Z",
-    "id": 11,
-    "commentsCount": 2,
-    "views": 12,
-    "likeCount": 4,
-    "updatedAt": "2024-11-19T06:40:59.826Z"
-  },
-  {
-    "title": "인피니트 스크롤링 ",
-    "content": "확인!!",
-    "nickname": "bakgom",
-    "time": "2024-11-06T09:35:53.148Z",
-    "id": 17,
-    "commentsCount": 1,
-    "updatedAt": "2024-11-06T09:41:32.647Z",
-    "views": 15
-  },
-  {
-    "title": "HELLO",
-    "content": "HELLLLLLO",
-    "nickname": "bakgomtest",
-    "time": "2024-11-08T06:33:22.118Z",
-    "id": 18,
-    "likeCount": 88,
-    "commentsCount": 5,
-    "views": 10,
-    "updatedAt": "2024-11-13T07:41:20.025Z"
-  },
-  {
-    "title": "내 커뮤니티는 완성도가 높은가?",
-    "content": "댓글 부탁해용 ㅎㅎ",
-    "nickname": "Bakgom :-)",
-    "time": "2024-11-13T00:46:04.734Z",
-    "image": "1731999411823-68302462.png",
-    "id": 22,
-    "views": 18,
-    "likeCount": 1,
-    "commentsCount": 3,
-    "updatedAt": "2024-11-19T06:56:51.832Z"
-  },
-  {
-    "title": "우리나라의 아름다움",
-    "content": "너무 이쁘네요 ㅎㅎ",
-    "nickname": "Bakgom :-)",
-    "time": "2024-11-13T00:48:56.179Z",
-    "image": "1731999384719-898876515.png",
-    "id": 23,
-    "views": 28,
-    "likeCount": 4,
-    "commentsCount": 3,
-    "updatedAt": "2024-11-19T06:56:24.722Z"
-  },
-  {
-    "title": "맨유 우승",
-    "content": "2024 FA컵의 주인은 맨체스터 유나이티드입니다",
-    "nickname": "Bakgom :-)",
-    "time": "2024-11-13T00:53:10.245Z",
-    "image": "1731483431482-82314266.jpg",
-    "id": 24,
-    "views": 898,
-    "likeCount": 124,
-    "commentsCount": 13,
-    "updatedAt": "2024-11-13T07:37:37.529Z"
-  }
+    {
+        "title": "안녕세상아",
+        "content": "hello world",
+        "nickname": "헬로월드",
+        "time": "2024-11-05T13:26:08.376Z",
+        "id": 11,
+        "commentsCount": 2,
+        "views": 12,
+        "likeCount": 4,
+        "updatedAt": "2024-11-19T06:40:59.826Z"
+    },
+    {
+        "title": "인피니트 스크롤링 ",
+        "content": "확인!!",
+        "nickname": "bakgom",
+        "time": "2024-11-06T09:35:53.148Z",
+        "id": 17,
+        "commentsCount": 1,
+        "updatedAt": "2024-11-06T09:41:32.647Z",
+        "views": 15
+    },
+    {
+        "title": "HELLO",
+        "content": "HELLLLLLO",
+        "nickname": "bakgomtest",
+        "time": "2024-11-08T06:33:22.118Z",
+        "id": 18,
+        "likeCount": 88,
+        "commentsCount": 5,
+        "views": 10,
+        "updatedAt": "2024-11-13T07:41:20.025Z"
+    },
+    {
+        "title": "내 커뮤니티는 완성도가 높은가?",
+        "content": "댓글 부탁해용 ㅎㅎ",
+        "nickname": "Bakgom :-)",
+        "time": "2024-11-13T00:46:04.734Z",
+        "image": "1731999411823-68302462.png",
+        "id": 22,
+        "views": 18,
+        "likeCount": 1,
+        "commentsCount": 3,
+        "updatedAt": "2024-11-19T06:56:51.832Z"
+    },
+    {
+        "title": "우리나라의 아름다움",
+        "content": "너무 이쁘네요 ㅎㅎ",
+        "nickname": "Bakgom :-)",
+        "time": "2024-11-13T00:48:56.179Z",
+        "image": "1731999384719-898876515.png",
+        "id": 23,
+        "views": 28,
+        "likeCount": 4,
+        "commentsCount": 3,
+        "updatedAt": "2024-11-19T06:56:24.722Z"
+    },
+    {
+        "title": "맨유 우승",
+        "content": "2024 FA컵의 주인은 맨체스터 유나이티드입니다",
+        "nickname": "Bakgom :-)",
+        "time": "2024-11-13T00:53:10.245Z",
+        "image": "1731483431482-82314266.jpg",
+        "id": 24,
+        "views": 901,
+        "likeCount": 124,
+        "commentsCount": 14,
+        "updatedAt": "2024-11-13T07:37:37.529Z"
+    }
 ]

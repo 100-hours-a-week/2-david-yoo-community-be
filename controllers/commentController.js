@@ -4,6 +4,7 @@ import path from 'path';
 const commentInfoPath = path.join(process.cwd(), 'data', 'commentInfo.json');
 const postDataPath = path.join(process.cwd(), 'data', 'post-data.json');
 
+// 댓글 작성
 export const addComment = (req, res) => {
     const { postId, content, author } = req.body;
 
@@ -82,6 +83,7 @@ export const getComments = (req, res) => {
     });
 };
 
+// 댓글 삭제
 export const deleteComment = async (req, res) => {
     const commentId = parseInt(req.params.id, 10);
 
@@ -133,6 +135,53 @@ export const deleteComment = async (req, res) => {
         });
     } catch (error) {
         console.error('댓글 삭제 중 오류:', error);
+        res.status(500).json({
+            success: false,
+            message: '서버 오류가 발생했습니다.',
+        });
+    }
+};
+
+// 댓글 수정
+export const updateComment = async (req, res) => {
+    const commentId = parseInt(req.params.id, 10);
+    const { content } = req.body;
+
+    try {
+        const commentsData = await fs.promises.readFile(
+            'data/commentInfo.json',
+            'utf8',
+        );
+        let comments = JSON.parse(commentsData || '[]');
+
+        const commentIndex = comments.findIndex(c => c.id === commentId);
+
+        if (commentIndex === -1) {
+            return res.status(404).json({
+                success: false,
+                message: '댓글을 찾을 수 없습니다.',
+            });
+        }
+
+        // 댓글 업데이트, 날짜 업데이트
+        comments[commentIndex] = {
+            ...comments[commentIndex],
+            content,
+            lastModified: new Date().toISOString(),
+        };
+
+        await fs.promises.writeFile(
+            'data/commentInfo.json',
+            JSON.stringify(comments, null, 2),
+        );
+
+        res.json({
+            success: true,
+            comment: comments[commentIndex],
+            message: '댓글이 성공적으로 수정되었습니다.',
+        });
+    } catch (error) {
+        console.error('댓글 수정 중 오류:', error);
         res.status(500).json({
             success: false,
             message: '서버 오류가 발생했습니다.',
