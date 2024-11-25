@@ -35,7 +35,6 @@
 
 - **데이터베이스**
   - MariaDB
-  - mysql2 (Promise 기반 MariaDB/MySQL 클라이언트)
 
 - **인증**
   - express-session
