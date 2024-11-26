@@ -7,6 +7,12 @@
 import bcrypt from 'bcrypt';
 import { saveBase64Image } from '../utils/fileUtils.js';
 import pool from '../config/database.js';
+import {
+    validateEmail,
+    validatePassword,
+    validateNickname,
+    validateBase64Image,
+} from '../utils/validationUtils.js';
 
 // 회원가입 처리
 // @param {Object} req.body - 요청 본문
@@ -17,7 +23,44 @@ import pool from '../config/database.js';
 // @returns {Object} 회원가입 결과 메시지
 export const signup = async (req, res) => {
     const { email, password, nickname, profileImage } = req.body;
+    // 이메일 검증
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: emailValidation.message,
+        });
+    }
+
+    // 비밀번호 검증
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: passwordValidation.message,
+        });
+    }
+
+    // 닉네임 검증
+    const nicknameValidation = validateNickname(nickname);
+    if (!nicknameValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: nicknameValidation.message,
+        });
+    }
+
+    // 프로필 이미지 검증 (있는 경우)
     let profileImageName = 'default.webp';
+    if (profileImage && profileImage !== 'default.webp') {
+        const imageValidation = validateBase64Image(profileImage);
+        if (!imageValidation.isValid) {
+            return res.status(400).json({
+                success: false,
+                message: imageValidation.message,
+            });
+        }
+    }
 
     try {
         // SQL 쿼리 실행 전 데이터 로깅
@@ -73,6 +116,14 @@ export const signup = async (req, res) => {
 // @returns {Object} 탈퇴 처리 결과 메시지
 export const withdrawUser = async (req, res) => {
     const { email } = req.body;
+    // 이메일 검증
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: emailValidation.message,
+        });
+    }
 
     try {
         // 사용자 삭제 처리
@@ -113,6 +164,24 @@ export const withdrawUser = async (req, res) => {
 // @returns {Object} 로그인 결과 및 사용자 정보
 export const login = async (req, res) => {
     const { email, password } = req.body;
+
+    // 이메일 검증
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: emailValidation.message,
+        });
+    }
+
+    // 비밀번호 검증
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: passwordValidation.message,
+        });
+    }
 
     try {
         // 이메일로 사용자 조회

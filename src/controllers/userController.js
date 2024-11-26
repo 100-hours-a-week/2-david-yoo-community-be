@@ -7,6 +7,12 @@
 import bcrypt from 'bcrypt';
 import pool from '../config/database.js';
 import { saveBase64Image, deleteFile } from '../utils/fileUtils.js';
+import {
+    validateEmail,
+    validatePassword,
+    validateNickname,
+    validateBase64Image,
+} from '../utils/validationUtils.js';
 
 // 닉네임 업데이트
 // @param {Object} req.body - 요청 본문
@@ -15,6 +21,15 @@ import { saveBase64Image, deleteFile } from '../utils/fileUtils.js';
 // @returns {Object} 업데이트 결과
 export const updateNickname = async (req, res) => {
     const { email, nickname } = req.body;
+
+    // 닉네임 검증
+    const nicknameValidation = validateNickname(nickname);
+    if (!nicknameValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: nicknameValidation.message,
+        });
+    }
 
     try {
         // 닉네임 업데이트 실행
@@ -48,6 +63,17 @@ export const updateNickname = async (req, res) => {
 // @returns {Object} 업데이트된 이미지 정보
 export const updateProfileImage = async (req, res) => {
     const { email, profileImage } = req.body;
+
+    // 이미지 검증 (있는 경우)
+    if (profileImage && profileImage !== 'default.webp') {
+        const imageValidation = validateBase64Image(profileImage);
+        if (!imageValidation.isValid) {
+            return res.status(400).json({
+                success: false,
+                message: imageValidation.message,
+            });
+        }
+    }
 
     try {
         // 기존 사용자 정보 조회
@@ -149,6 +175,24 @@ export const getProfileImage = async (req, res) => {
 // @returns {Object} 변경 결과 메시지
 export const changePassword = async (req, res) => {
     const { email, newPassword } = req.body;
+
+    // 이메일 검증
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: emailValidation.message,
+        });
+    }
+
+    // 새 비밀번호 검증
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: passwordValidation.message,
+        });
+    }
 
     try {
         // 새 비밀번호 해시화

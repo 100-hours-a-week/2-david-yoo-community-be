@@ -5,6 +5,7 @@
  */
 
 import pool from '../config/database.js';
+import { validateId, validateContent } from '../utils/validationUtils.js';
 
 // 댓글 작성
 // @param {Object} req.body - 요청 본문
@@ -20,6 +21,22 @@ export const addComment = async (req, res) => {
         return res.status(400).json({
             success: false,
             message: '로그인이 필요합니다.',
+        });
+    }
+    // postId 검증
+    const postIdValidation = validateId(postId);
+    if (!postIdValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: postIdValidation.message,
+        });
+    }
+    // 내용 검증 (댓글이므로 isPost = false)
+    const contentValidation = validateContent(content, false);
+    if (!contentValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: contentValidation.message,
         });
     }
 
@@ -114,6 +131,15 @@ export const addComment = async (req, res) => {
 export const getComments = async (req, res) => {
     const { postId } = req.params;
 
+    // postId 검증
+    const postIdValidation = validateId(postId);
+    if (!postIdValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: postIdValidation.message,
+        });
+    }
+
     try {
         // 게시글에 달린 댓글 목록 조회 (작성자 닉네임 포함)
         const [comments] = await pool.query(
@@ -155,6 +181,15 @@ export const deleteComment = async (req, res) => {
         return res.status(400).json({
             success: false,
             message: '인증 정보가 없습니다.',
+        });
+    }
+
+    // commentId 검증
+    const commentIdValidation = validateId(commentId);
+    if (!commentIdValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: commentIdValidation.message,
         });
     }
 
@@ -237,10 +272,29 @@ export const updateComment = async (req, res) => {
     const commentId = parseInt(req.params.id);
     const { content, author_email } = req.body;
 
+    // 인증 검증
     if (!author_email) {
         return res.status(400).json({
             success: false,
             message: '인증 정보가 없습니다.',
+        });
+    }
+
+    // commentId 검증
+    const commentIdValidation = validateId(commentId);
+    if (!commentIdValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: commentIdValidation.message,
+        });
+    }
+
+    // 내용 검증 (댓글이므로 isPost = false)
+    const contentValidation = validateContent(content, false);
+    if (!contentValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: contentValidation.message,
         });
     }
 
