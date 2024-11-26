@@ -7,6 +7,11 @@
 
 import pool from '../config/database.js';
 import { upload, deleteFile } from '../utils/fileUtils.js';
+import {
+    validateTitle,
+    validateFile,
+    validateId,
+} from '../utils/validationUtils.js';
 
 // 게시글 작성 처리
 // @param {Object} req.body - 요청 본문
@@ -164,6 +169,28 @@ export const updatePost = async (req, res) => {
         const postId = parseInt(req.params.id, 10);
         const { title, content, nickname } = req.body;
 
+        // 입력된 값이 있는 경우에만 검증
+        if (title) {
+            const titleValidation = validateTitle(title);
+            if (!titleValidation.isValid) {
+                return res.status(400).json({
+                    success: false,
+                    message: titleValidation.message,
+                });
+            }
+        }
+
+        // 파일 검증 (있는 경우)
+        if (req.file) {
+            const fileValidation = validateFile(req.file);
+            if (!fileValidation.isValid) {
+                return res.status(400).json({
+                    success: false,
+                    message: fileValidation.message,
+                });
+            }
+        }
+
         try {
             // 기존 게시글 조회
             const [existingPost] = await pool.query(
@@ -218,6 +245,15 @@ export const updatePost = async (req, res) => {
 // @returns {Object} 삭제 결과 메시지
 export const deletePost = async (req, res) => {
     const postId = parseInt(req.params.id, 10);
+
+    // postId 검증
+    const postIdValidation = validateId(postId);
+    if (!postIdValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: postIdValidation.message,
+        });
+    }
 
     try {
         // 삭제할 게시글이 존재하는지 확인

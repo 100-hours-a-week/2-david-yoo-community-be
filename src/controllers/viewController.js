@@ -5,12 +5,22 @@
  */
 
 import pool from '../config/database.js';
+import { validateId } from '../utils/validationUtils.js';
 
 // 조회수 증가 처리
 // @param {number} req.params.id - 게시글 ID
 // @returns {Object} 업데이트된 조회수 정보
 export const incrementViews = async (req, res) => {
     const postId = parseInt(req.params.id);
+
+    // postId 검증
+    const postIdValidation = validateId(postId);
+    if (!postIdValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: postIdValidation.message,
+        });
+    }
 
     try {
         // 조회수 증가
@@ -51,6 +61,15 @@ export const incrementViews = async (req, res) => {
 // @returns {Object} 현재 조회수 정보
 export const getViews = async (req, res) => {
     const postId = parseInt(req.params.id);
+
+    // postId 검증
+    const postIdValidation = validateId(postId);
+    if (!postIdValidation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: postIdValidation.message,
+        });
+    }
 
     try {
         // 현재 조회수 조회
