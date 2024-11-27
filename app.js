@@ -24,6 +24,7 @@ dotenv.config();
 app.use(
     cors({
         origin: 'http://127.0.0.1:5500',
+        // origin: 'http://3.35.132.8:3001',
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
         credentials: true,
         allowedHeaders: [
@@ -61,6 +62,7 @@ app.use(
     '/uploads',
     (req, res, next) => {
         res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');
+        // res.header('Access-Control-Allow-Origin', 'http://3.35.132.8:3001');
         res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
         res.header(
             'Access-Control-Allow-Headers',
@@ -75,9 +77,9 @@ app.use(
 app.use('/auth', authRoutes);
 app.use('/posts', postRoutes);
 app.use('/user', userRoutes);
-app.use('/api', commentRoutes);
-app.use('/api', likeRoutes);
-app.use('/api/views', viewRoutes);
+app.use('/comments', commentRoutes);
+app.use('/likes', likeRoutes);
+app.use('/views', viewRoutes);
 
 // 서버 시작
 app.listen(PORT, () =>
