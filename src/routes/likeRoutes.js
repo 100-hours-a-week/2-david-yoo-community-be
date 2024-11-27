@@ -3,7 +3,7 @@ import { updateLikes, checkLikeStatus } from '../controllers/likeController.js';
 
 const router = express.Router();
 
-router.post('/likes/:postId', updateLikes);
-router.get('/likes/check/:postId', checkLikeStatus);
+router.post('/:postId', updateLikes);
+router.get('/check/:postId', checkLikeStatus);
 
 export default router;
