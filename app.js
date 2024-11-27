@@ -1,9 +1,6 @@
-import fs from 'fs';
 import path from 'path';
 import express from 'express';
 import cors from 'cors';
-import { fileURLToPath } from 'url';
-import multer from 'multer';
 import session from 'express-session';
 import dotenv from 'dotenv';
 
@@ -21,36 +18,7 @@ import './src/config/database.js';
 // Express 앱 초기화 및 환경 설정
 const app = express();
 const PORT = process.env.PORT || 3000;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 dotenv.config();
-
-// 업로드 디렉토리 구조 설정
-const uploadsDir = path.join(__dirname, 'uploads');
-const profilesDir = path.join(uploadsDir, 'profiles');
-const postsDir = path.join(uploadsDir, 'posts');
-
-// 필요한 디렉토리 생성
-[uploadsDir, profilesDir, postsDir].forEach(dir => {
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-});
-
-// Multer 파일 업로드 설정
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        // 프로필 이미지와 게시글 이미지를 다른 경로에 저장
-        const isProfile = req.path.includes('profile');
-        const uploadPath = isProfile ? profilesDir : postsDir;
-        cb(null, uploadPath);
-    },
-    filename: (req, file, cb) => {
-        // 파일명 중복 방지를 위한 유니크 이름 생성
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    },
-});
-
-const upload = multer({ storage });
 
 // CORS 설정
 app.use(
