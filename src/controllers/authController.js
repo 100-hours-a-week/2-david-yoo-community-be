@@ -63,13 +63,6 @@ export const signup = async (req, res) => {
     }
 
     try {
-        // SQL 쿼리 실행 전 데이터 로깅
-        console.log('Inserting user with data:', {
-            email,
-            nickname,
-            profileImageName,
-        });
-
         // 프로필 이미지 처리
         if (profileImage && profileImage !== 'default.webp') {
             profileImageName = await saveBase64Image(profileImage, email, true);

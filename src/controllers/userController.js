@@ -32,6 +32,9 @@ export const updateNickname = async (req, res) => {
     }
 
     try {
+        const connection = await pool.getConnection();
+        await connection.beginTransaction();
+
         // 닉네임 업데이트 실행
         const [result] = await pool.query(
             'UPDATE users SET nickname = ? WHERE email = ?',
@@ -40,15 +43,27 @@ export const updateNickname = async (req, res) => {
 
         // 업데이트된 행이 없는 경우 사용자가 존재하지 않음
         if (result.affectedRows === 0) {
+            await connection.rollback();
             return res.status(404).json({
                 success: false,
                 message: '사용자를 찾을 수 없습니다.',
             });
         }
 
+        // posts 테이블의 닉네임도 업데이트
+        await connection.query(
+            'UPDATE posts SET nickname = ? WHERE author_email = ?',
+            [nickname, email],
+        );
+
+        await connection.commit();
+
         res.json({ success: true });
     } catch (error) {
         console.error('닉네임 업데이트 오류:', error);
+        if (connection) {
+            await connection.rollback();
+        }
         res.status(500).json({
             success: false,
             message: '서버 오류가 발생했습니다.',
@@ -158,6 +173,7 @@ export const getProfileImage = async (req, res) => {
             success: true,
             profileImage: profileImage,
             imageUrl: `http://localhost:3000/uploads/${profileImage}`,
+            nickname: user.nickname,
         });
     } catch (error) {
         console.error('Profile image fetch error:', error);
@@ -218,6 +234,39 @@ export const changePassword = async (req, res) => {
         });
     } catch (error) {
         console.error('비밀번호 변경 오류:', error);
+        res.status(500).json({
+            success: false,
+            message: '서버 오류가 발생했습니다.',
+        });
+    }
+};
+
+// 사용자 프로필 정보 조회
+// @param {string} req.params.email - 사용자 이메일
+// @returns {Object} 사용자 프로필 정보
+export const getUserProfile = async (req, res) => {
+    const { email } = req.params;
+
+    try {
+        // 사용자 정보 조회
+        const [users] = await pool.query(
+            'SELECT email, nickname FROM users WHERE email = ?',
+            [email],
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: '사용자를 찾을 수 없습니다.',
+            });
+        }
+
+        res.json({
+            success: true,
+            user: users[0],
+        });
+    } catch (error) {
+        console.error('사용자 프로필 조회 오류:', error);
         res.status(500).json({
             success: false,
             message: '서버 오류가 발생했습니다.',
