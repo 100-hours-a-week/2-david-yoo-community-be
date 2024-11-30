@@ -89,8 +89,8 @@ export const validateNickname = nickname => {
         };
     }
 
-    // 한글, 영문, 숫자만 허용
-    const nicknameRegex = /^[가-힣a-zA-Z0-9]+$/;
+    // 한글, 영문, 숫자, 하이픈만 허용
+    const nicknameRegex = /^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ_-]+$/;
     if (!nicknameRegex.test(nickname)) {
         return {
             isValid: false,

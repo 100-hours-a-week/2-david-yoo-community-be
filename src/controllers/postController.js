@@ -90,15 +90,22 @@ export const getPosts = async (req, res) => {
         const totalPosts = countResult[0].total;
         const totalPages = Math.ceil(totalPosts / limit);
 
-        // 페이지네이션이 적용된 게시글 목록 조회
+        // 페이지네이션이 적용된 게시글 목록 조회 (users 테이블과 조인)
         const [posts] = await pool.query(
-            'SELECT * FROM posts ORDER BY created_at DESC LIMIT ? OFFSET ?',
+            `SELECT 
+                p.*,
+                u.nickname as current_nickname
+            FROM posts p
+            LEFT JOIN users u ON p.author_email = u.email
+            ORDER BY p.created_at DESC 
+            LIMIT ? OFFSET ?`,
             [limit, offset],
         );
 
-        // 이미지 URL 추가
+        // 최신 닉네임과 이미지 URL이 포함된 게시글 목록
         const postsWithUrls = posts.map(post => ({
             ...post,
+            nickname: post.current_nickname, // 최신 닉네임으로 덮어쓰기
             imageUrl: post.image
                 ? `http://localhost:3000/uploads/${post.image}`
                 : null,
@@ -125,9 +132,15 @@ export const getPostById = async (req, res) => {
 
     try {
         // ID로 게시글 조회
-        const [posts] = await pool.query('SELECT * FROM posts WHERE id = ?', [
-            postId,
-        ]);
+        const [posts] = await pool.query(
+            `SELECT 
+                p.*,
+                u.nickname as current_nickname
+            FROM posts p
+            LEFT JOIN users u ON p.author_email = u.email
+            WHERE p.id = ?`,
+            [postId],
+        );
 
         if (posts.length === 0) {
             return res.status(404).json({
@@ -135,6 +148,12 @@ export const getPostById = async (req, res) => {
                 message: '게시글을 찾을 수 없습니다.',
             });
         }
+
+        const post = {
+            ...posts[0],
+            nickname: posts[0].current_nickname || posts[0].nickname, // 최신 닉네임이 있으면 사용, 없으면 기존 닉네임 유지
+        };
+        delete post.current_nickname;
 
         res.json({
             success: true,
