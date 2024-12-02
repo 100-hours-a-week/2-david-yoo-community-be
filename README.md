@@ -6,9 +6,26 @@
 게시판 기능을 제공하는 서버입니다. Express.js와 MariaDB를 기반으로 구현되었으며, 사용자 인증, 게시글 관리, 댓글, 좋아요 등 다양한 기능을 제공합니다.
 
 ## 기술 스택
-<img src="https://img.shields.io/badge/-Amazon RDS-527FFF?style=flat&logo=amazonrds&logoColor=white"/>
-<img src="https://img.shields.io/badge/Express-000000?style=flat-square&logo=Express&logoColor=white"/>
-<img src="https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=mariaDB&logoColor=white"/>
+<div style="display:flex;gap:30px;flex-wrap:wrap;">
+    <img src="https://img.shields.io/badge/-Node.js-339933?style=flat&logo=nodedotjs&logoColor=white"/>
+    <img src="https://img.shields.io/badge/-Amazon RDS-527FFF?style=flat&logo=amazonrds&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Express-000000?style=flat-square&logo=Express&logoColor=white"/>
+    <img src="https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=mariaDB&logoColor=white"/>
+</div>
+- **Backend**
+  - Node.js
+  - Express.js
+
+- **데이터베이스**
+  - MariaDB
+
+- **인증**
+  - express-session
+  - bcrypt (비밀번호 암호화)
+
+- **파일 처리**
+  - Multer (파일 업로드)
+  - Base64 이미지 처리
 
 ## 주요 기능
 - **사용자 관리**
@@ -32,22 +49,6 @@
   - 게시글 좋아요/취소
   - 좋아요 상태 확인
 
-## 기술 스택
-
-- **Backend**
-  - Node.js
-  - Express.js
-
-- **데이터베이스**
-  - MariaDB
-
-- **인증**
-  - express-session
-  - bcrypt (비밀번호 암호화)
-
-- **파일 처리**
-  - Multer (파일 업로드)
-  - Base64 이미지 처리
 
 ## 설치 방법
 
