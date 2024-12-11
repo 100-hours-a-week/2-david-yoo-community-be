@@ -20,22 +20,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 dotenv.config();
 
-// CORS 설정
-app.use(
-    cors({
-        origin: 'http://127.0.0.1:5500',
-        // origin: 'http://43.203.237.161:3001',
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-        credentials: true,
-        allowedHeaders: [
-            'Content-Type',
-            'X-User-Email',
-            'Access-Control-Allow-Headers',
-            'Access-Control-Allow-Origin',
-            'Authorization',
-        ],
-    }),
-);
 
 // 요청 본문 파싱 설정
 app.use(express.json({ limit: '50mb' }));
@@ -61,8 +45,8 @@ app.use(
 app.use(
     '/uploads',
     (req, res, next) => {
-        res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');
-        // res.header('Access-Control-Allow-Origin', 'http://43.203.237.161:3001');
+        // res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');
+        res.header('Access-Control-Allow-Origin', 'http://43.203.237.161');
         res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
         res.header(
             'Access-Control-Allow-Headers',
@@ -74,12 +58,17 @@ app.use(
 );
 
 // 라우트 설정
-app.use('/auth', authRoutes);
-app.use('/posts', postRoutes);
-app.use('/user', userRoutes);
-app.use('/comments', commentRoutes);
-app.use('/likes', likeRoutes);
-app.use('/views', viewRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/comments', commentRoutes);
+app.use('/api/likes', likeRoutes);
+app.use('/api/views', viewRoutes);
+
+// health check
+app.get('/health', (req, res)=>{
+    res.send('ok');
+});
 
 // 서버 시작
 app.listen(PORT, () =>
