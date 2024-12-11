@@ -6,7 +6,7 @@
  */
 
 import pool from '../config/database.js';
-import { upload, deleteFile } from '../utils/fileUtils.js';
+import { upload, deleteFile, getImageUrl } from '../utils/fileUtils.js';
 import {
     validateTitle,
     validateFile,
@@ -23,6 +23,7 @@ import {
 // @returns {Object} 생성된 게시글 정보
 export const createPost = async (req, res) => {
     // Multer 미들웨어를 통한 파일 업로드 처리
+    req.uploadType = 'posts';
     upload.single('image')(req, res, async err => {
         if (err) {
             console.error('File upload error:', err);
@@ -39,7 +40,7 @@ export const createPost = async (req, res) => {
             }
 
             // 이미지 경로 설정 (업로드된 경우)
-            const imagePath = req.file ? `posts/${req.file.filename}` : null;
+            const imagePath = req.file ? req.savedFileName : null;
 
             // 게시글 데이터베이스 저장
             const [result] = await pool.query(
@@ -57,7 +58,7 @@ export const createPost = async (req, res) => {
             // 이미지 URL 추가
             const post = newPost[0];
             if (post.image) {
-                post.imageUrl = `http://localhost:3000/uploads/${post.image}`;
+                post.imageUrl = getImageUrl(post.image.split('/').pop(), false);
             }
 
             res.json({
@@ -105,9 +106,9 @@ export const getPosts = async (req, res) => {
         // 최신 닉네임과 이미지 URL이 포함된 게시글 목록
         const postsWithUrls = posts.map(post => ({
             ...post,
-            nickname: post.current_nickname, // 최신 닉네임으로 덮어쓰기
+            nickname: post.current_nickname,
             imageUrl: post.image
-                ? `http://localhost:3000/uploads/${post.image}`
+                ? getImageUrl(post.image.split('/').pop(), false)
                 : null,
         }));
 
@@ -152,6 +153,7 @@ export const getPostById = async (req, res) => {
         const post = {
             ...posts[0],
             nickname: posts[0].current_nickname || posts[0].nickname, // 최신 닉네임이 있으면 사용, 없으면 기존 닉네임 유지
+            imageUrl: posts[0].image ? getImageUrl(posts[0].image.split('/').pop(), false) : null
         };
         delete post.current_nickname;
 
@@ -177,6 +179,7 @@ export const getPostById = async (req, res) => {
 // @param {File} req.file - 새로 업로드된 이미지 파일
 // @returns {Object} 수정된 게시글 정보
 export const updatePost = async (req, res) => {
+    req.uploadType = 'posts';
     upload.single('image')(req, res, async err => {
         if (err) {
             console.error('파일 업로드 에러:', err);
@@ -236,7 +239,7 @@ export const updatePost = async (req, res) => {
                     content || existingPost[0].content,
                     nickname || existingPost[0].nickname,
                     req.file
-                        ? `posts/${req.file.filename}`
+                        ? req.file.key
                         : existingPost[0].image,
                     postId,
                 ],

@@ -6,13 +6,14 @@
 
 import bcrypt from 'bcrypt';
 import pool from '../config/database.js';
-import { saveBase64Image, deleteFile } from '../utils/fileUtils.js';
 import {
     validateEmail,
     validatePassword,
     validateNickname,
     validateBase64Image,
 } from '../utils/validationUtils.js';
+import { upload, deleteFile, getImageUrl, saveBase64Image } from '../utils/fileUtils.js';
+
 
 // 닉네임 업데이트
 // @param {Object} req.body - 요청 본문
@@ -126,9 +127,9 @@ export const updateProfileImage = async (req, res) => {
         res.status(200).json({
             success: true,
             profileImage: profileImageName,
-            imageUrl: `http://localhost:3000/uploads/profiles/${profileImageName}`,
+            imageUrl: getImageUrl(profileImageName, true),
             message: 'Profile image updated successfully',
-        });
+        });        
     } catch (error) {
         console.error('Profile image update error:', error);
         res.status(500).json({
@@ -172,7 +173,7 @@ export const getProfileImage = async (req, res) => {
         res.json({
             success: true,
             profileImage: profileImage,
-            imageUrl: `http://localhost:3000/uploads/${profileImage}`,
+            imageUrl: getImageUrl(profileImage.split('/').pop(), true),
             nickname: user.nickname,
         });
     } catch (error) {
@@ -186,7 +187,7 @@ export const getProfileImage = async (req, res) => {
 
 // 비밀번호 변경
 // @param {Object} req.body - 요청 본문
-// @param {string} req.body.email - 사용자 이메일
+// @param {string} req.body.email - 사용자 ��메일
 // @param {string} req.body.newPassword - 새로운 비밀번호
 // @returns {Object} 변경 결과 메시지
 export const changePassword = async (req, res) => {

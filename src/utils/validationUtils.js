@@ -57,7 +57,7 @@ export const validatePassword = password => {
     }
 
     // 최소 하나의 대문자, 숫자, 특수문자 포함
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/;
+    const passwordRegex = /(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/;
     if (!passwordRegex.test(password)) {
         return {
             isValid: false,

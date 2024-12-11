@@ -1,55 +1,35 @@
-/*
- * 파일 관리 유틸리티
- * 파일 업로드, 삭제, 이미지 변환 등 파일 처리 관련 기능을 제공
- * Multer를 활용한 파일 업로드와 Base64 이미지 처리 구현
- */
-
-import fs from 'fs';
 import multer from 'multer';
+import multerS3 from 'multer-s3';
 import path from 'path';
+import { s3, BUCKET_NAME, CLOUDFRONT_DOMAIN } from '../config/s3config.js';
 
-// 업로드 디렉토리 생성 및 확인
-// @param {string} dirName - 생성할 디렉토리 이름 (기본값: 'uploads')
-// @returns {string} 생성된 업로드 디렉토리 경로
-export const ensureUploadDirectory = (dirName = 'uploads') => {
-    const uploadDir = path.join(process.cwd(), dirName);
-    // 메인 업로드 디렉토리 생성
-    if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    // profiles와 posts 서브디렉토리 생성
-    const profilesDir = path.join(uploadDir, 'profiles');
-    const postsDir = path.join(uploadDir, 'posts');
-
-    if (!fs.existsSync(profilesDir)) {
-        fs.mkdirSync(profilesDir, { recursive: true });
-    }
-    if (!fs.existsSync(postsDir)) {
-        fs.mkdirSync(postsDir, { recursive: true });
-    }
-
-    return uploadDir;
-};
-
-// Multer 스토리지 설정 (게시글 이미지용)
-const postStorage = multer.diskStorage({
-    // 파일 저장 위치 설정
-    destination: (req, file, cb) => {
-        const uploadDir = path.join(ensureUploadDirectory(), 'posts');
-        cb(null, uploadDir);
-    },
-    // 파일 이름 설정 (중복 방지를 위한 타임스탬프 사용)
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    },
+// AWS 설정 로그
+console.log('AWS Config:', {
+    bucketName: BUCKET_NAME,
+    hasS3: !!s3,
+    cloudfront: CLOUDFRONT_DOMAIN
 });
 
-// 파일 형식 필터링
-// @param {Object} req - 요청 객체
-// @param {Object} file - 업로드된 파일 정보
-// @param {Function} cb - 콜백 함수
+// multerS3 설정
+const s3Storage = multerS3({
+    s3: s3,
+    bucket: BUCKET_NAME,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    key: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        const filename = `${uniqueSuffix}${path.extname(file.originalname)}`;
+        
+        // S3에는 전체 경로로 저장하지만
+        const subDir = req.uploadType === 'profile' ? 'profiles' : 'posts';
+        const s3Key = `uploads/${subDir}/${filename}`;
+        
+        // req에 순수 파일명만 저장하여 DB에는 파일명만 저장되도록 함
+        req.savedFileName = filename;
+        
+        cb(null, s3Key);
+    }
+});
+
 const fileFilter = (req, file, cb) => {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
     if (allowedTypes.includes(file.mimetype)) {
@@ -59,74 +39,72 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-// Multer 업로드 설정
 export const upload = multer({
-    storage: postStorage,
+    storage: s3Storage,
     fileFilter,
     limits: {
         fileSize: 5 * 1024 * 1024, // 5MB 제한
-    },
+    }
 });
 
-// 파일 삭제
-// @param {string} filename - 삭제할 파일 이름
-// @param {boolean} isProfile - 프로필 이미지 여부
-// @throws {Error} 파일 삭제 실패 시 에러
 export const deleteFile = async (filename, isProfile = false) => {
     if (!filename || filename === 'default.webp') return;
-
     const subDir = isProfile ? 'profiles' : 'posts';
-    const filePath = path.join(process.cwd(), 'uploads', subDir, filename);
-
+    const key = `uploads/${subDir}/${filename}`;
     try {
-        if (fs.existsSync(filePath)) {
-            await fs.promises.unlink(filePath);
-        }
+        await s3.deleteObject({
+            Bucket: BUCKET_NAME,
+            Key: key
+        }).promise();
     } catch (error) {
         console.error('파일 삭제 실패:', error);
         throw error;
     }
 };
 
-// Base64 이미지 저장
-// @param {string} base64Data - Base64 형식의 이미지 데이터
-// @param {string} email - 사용자 이메일 (파일명 생성에 사용)
-// @param {boolean} isProfile - 프로필 이미지 여부
-// @returns {string} 저장된 파일명
-// @throws {Error} 유효하지 않은 이미지 데이터인 경우
 export const saveBase64Image = async (base64Data, email, isProfile = false) => {
-    // 데이터 유효성 검사
     if (!base64Data || !base64Data.startsWith('data:image')) {
         throw new Error('유효하지 않은 이미지 데이터입니다.');
     }
-
-    const uploadDir = ensureUploadDirectory();
     const subDir = isProfile ? 'profiles' : 'posts';
-    // Base64 데이터에서 실제 이미지 데이터 추출
     const imageData = base64Data.replace(/^data:image\/\w+;base64,/, '');
-    const imageBuffer = Buffer.from(imageData, 'base64');
-    // 고유한 파일명 생성
+    const buffer = Buffer.from(imageData, 'base64');
+    
     const filename = `${email}-${Date.now()}.png`;
-    const imagePath = path.join(uploadDir, subDir, filename);
-
-    await fs.promises.writeFile(imagePath, imageBuffer);
-    return filename;
+    const key = `uploads/${subDir}/${filename}`;
+    try {
+        await s3.putObject({
+            Bucket: BUCKET_NAME,
+            Key: key,
+            Body: buffer,
+            ContentType: 'image/png',
+            ACL: 'public-read'
+        }).promise();
+        return filename;
+    } catch (error) {
+        console.error('이미지 업로드 실패:', error);
+        throw error;
+    }
 };
 
-// 이미지를 Base64로 변환
-// @param {string} filename - 변환할 이미지 파일명
-// @param {boolean} isProfile - 프로필 이미지 여부
-// @returns {string|null} Base64 형식의 이미지 데이터 또는 null
-export const getImageAsBase64 = async (filename, isProfile = false) => {
+export const getImageUrl = (filename, isProfile = false) => {
     if (!filename) return null;
 
-    try {
-        const subDir = isProfile ? 'profiles' : 'posts';
-        const imagePath = path.join(process.cwd(), 'uploads', subDir, filename);
-        const imageData = await fs.promises.readFile(imagePath);
-        return `data:image/jpeg;base64,${imageData.toString('base64')}`;
-    } catch (error) {
-        console.error('이미지 로드 실패:', error);
-        return null;
+    // default.webp 처리
+    if (filename === 'default.webp') {
+        return `https://${CLOUDFRONT_DOMAIN}/uploads/profiles/default.webp`;
     }
+
+    // 게시글 이미지 (posts/로 시작하는 경우)
+    if (filename.startsWith('posts/')) {
+        return `https://${CLOUDFRONT_DOMAIN}/uploads/posts/${filename}`;
+    }
+
+    // 프로필 이미지
+    if (isProfile) {
+        return `https://${CLOUDFRONT_DOMAIN}/uploads/profiles/${filename}`;
+    }
+
+    // 그 외의 경우 (새로운 게시글 이미지)
+    return `https://${CLOUDFRONT_DOMAIN}/uploads/posts/${filename}`;
 };
